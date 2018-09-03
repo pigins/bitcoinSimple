@@ -8,10 +8,6 @@ import java.util.List;
 public class GetBlocks extends GetId {
     public static final String NAME = "getblocks";
 
-    public GetBlocks(Bytes bytes) {
-        super(bytes);
-    }
-
     public GetBlocks(ProtocolVersion protocolVersion, List<Bytes> hashes, boolean getAsManyBlocksAsPossible) {
         super(protocolVersion, hashes, getAsManyBlocksAsPossible);
     }

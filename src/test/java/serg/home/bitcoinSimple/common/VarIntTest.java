@@ -1,8 +1,8 @@
 package serg.home.bitcoinSimple.common;
 
 import org.junit.jupiter.api.Test;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 import serg.home.bitcoinSimple.network.model.VarInt;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,16 +20,13 @@ class VarIntTest {
 
     @Test
     void decode() {
-        ByteReader byteReader = new ByteReader(new Bytes("6A"));
-        VarInt varInt = new VarInt(byteReader);
+        VarInt varInt = new BtcMessage(new Bytes("6A")).nextVarInt();
         assertEquals("6A", varInt.encode().getHexString());
 
-        byteReader = new ByteReader(new Bytes("FD2602"));
-        varInt = new VarInt(byteReader);
+        varInt = new BtcMessage(new Bytes("FD2602")).nextVarInt();
         assertEquals("FD2602", varInt.encode().getHexString());
 
-        byteReader = new ByteReader(new Bytes("FE703A0F00"));
-        varInt = new VarInt(byteReader);
+        varInt = new BtcMessage(new Bytes("FE703A0F00")).nextVarInt();
         assertEquals("FE703A0F00", varInt.encode().getHexString());
     }
 }

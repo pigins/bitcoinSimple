@@ -2,11 +2,11 @@ package serg.home.bitcoinSimple.network.handlers;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import serg.home.bitcoinSimple.network.messages.CheckedMessage;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 
-public class DownloadBlocksHandler extends SimpleChannelInboundHandler<CheckedMessage> {
+public class DownloadBlocksHandler extends SimpleChannelInboundHandler<BtcMessage> {
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, CheckedMessage msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
 
     }
 }

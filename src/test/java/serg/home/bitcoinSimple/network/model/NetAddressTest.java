@@ -2,7 +2,7 @@ package serg.home.bitcoinSimple.network.model;
 
 import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +11,7 @@ class NetAddressTest {
     @Test
     void decode() {
         String hexString = "010400000000000000000000000000000000FFFF0A000001208D";
-        NetAddress netAddress = new NetAddress(new ByteReader(new Bytes(hexString)));
+        NetAddress netAddress = new BtcMessage(new Bytes(hexString)).nextNetAddress();
         assertEquals(hexString, netAddress.encode().getHexString());
     }
 

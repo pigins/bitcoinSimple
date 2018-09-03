@@ -1,7 +1,6 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.input;
 
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 public class CoinbaseInput extends Input {
@@ -12,25 +11,29 @@ public class CoinbaseInput extends Input {
 
     private CoinbaseData coinbaseData;
 
+    public CoinbaseInput(OutputLink outputLink, CoinbaseData coinbaseData, int uSequence) {
+        this.outputLink = outputLink;
+        this.coinbaseData = coinbaseData;
+        this.uSequence = uSequence;
+    }
+
     public CoinbaseInput(CoinbaseData coinbaseData) {
         this.outputLink = OUTPUT_LINK;
         this.uSequence = -1;
         this.coinbaseData = coinbaseData;
     }
 
-    public CoinbaseInput(ByteReader byteReader) {
-        decode(byteReader);
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        this.outputLink = new OutputLink(byteReader);
-        this.coinbaseData = new CoinbaseData(byteReader);
-        this.uSequence = byteReader.nextInt();
-    }
-
     @Override
     public Bytes encode() {
         return new CompoundBinary().add(outputLink).add(coinbaseData).add(Bytes.fromInt(uSequence)).encode();
+    }
+
+    @Override
+    public String toString() {
+        return "CoinbaseInput{" +
+                "coinbaseData=" + coinbaseData +
+                ", outputLink=" + outputLink +
+                ", uSequence=" + uSequence +
+                '}';
     }
 }

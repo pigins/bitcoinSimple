@@ -1,11 +1,9 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.input;
 
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 
-public class OutputLink implements BinaryEncoded, BinaryDecoded {
+public class OutputLink implements BinaryEncoded {
     private Bytes txHash;
     private int uVout;
 
@@ -14,18 +12,16 @@ public class OutputLink implements BinaryEncoded, BinaryDecoded {
         this.uVout = uVout;
     }
 
-    public OutputLink(ByteReader byteReader) {
-        decode(byteReader);
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        txHash = byteReader.next(32);
-        uVout = byteReader.nextInt();
-    }
-
     @Override
     public Bytes encode() {
         return txHash.concat(Bytes.fromInt(uVout));
+    }
+
+    @Override
+    public String toString() {
+        return "OutputLink{" +
+                "txHash=" + txHash +
+                ", uVout=" + uVout +
+                '}';
     }
 }

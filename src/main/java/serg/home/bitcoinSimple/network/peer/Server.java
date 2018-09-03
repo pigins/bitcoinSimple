@@ -7,20 +7,20 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import serg.home.bitcoinSimple.blockchain.LocalBlockchain;
-import serg.home.bitcoinSimple.config.NetConfig;
+import serg.home.bitcoinSimple.config.TestnetConfig;
 import serg.home.bitcoinSimple.network.knownAddresses.KnownAddresses;
 import serg.home.bitcoinSimple.network.peer.connection.BtcNioServerChannel;
 
 import java.io.Closeable;
 
 public class Server implements Runnable, Closeable {
-    private final NetConfig config;
+    private final TestnetConfig config;
     private final EventLoopGroup acceptGroup = new NioEventLoopGroup();
     private final EventLoopGroup workerGroup;
     private final KnownAddresses knownAddresses;
     private final LocalBlockchain localBlockchain;
 
-    public Server(NetConfig config, EventLoopGroup workerGroup, KnownAddresses knownAddresses, LocalBlockchain localBlockchain) {
+    public Server(TestnetConfig config, EventLoopGroup workerGroup, KnownAddresses knownAddresses, LocalBlockchain localBlockchain) {
         this.config = config;
         this.workerGroup = workerGroup;
         this.knownAddresses = knownAddresses;

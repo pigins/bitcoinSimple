@@ -4,7 +4,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 import serg.home.bitcoinSimple.blockchain.LocalBlockchain;
-import serg.home.bitcoinSimple.config.NetConfig;
+import serg.home.bitcoinSimple.config.TestnetConfig;
 import serg.home.bitcoinSimple.network.knownAddresses.KnownAddresses;
 import serg.home.bitcoinSimple.network.handlers.*;
 import serg.home.bitcoinSimple.network.peer.connection.BtcNioChannel;
@@ -12,11 +12,11 @@ import serg.home.bitcoinSimple.network.peer.connection.BtcNioChannel;
 public class SocketChannelInitializer extends ChannelInitializer<BtcNioChannel> {
     static final EventExecutorGroup longRunningTaskGroup = new NioEventLoopGroup();
 
-    private final NetConfig netConfig;
+    private final TestnetConfig netConfig;
     private final KnownAddresses knownAddresses;
     private final LocalBlockchain localBlockchain;
 
-    public SocketChannelInitializer(NetConfig netConfig, KnownAddresses knownAddresses, LocalBlockchain localBlockchain) {
+    public SocketChannelInitializer(TestnetConfig netConfig, KnownAddresses knownAddresses, LocalBlockchain localBlockchain) {
         this.netConfig = netConfig;
         this.knownAddresses = knownAddresses;
         this.localBlockchain = localBlockchain;

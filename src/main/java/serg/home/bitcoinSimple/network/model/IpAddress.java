@@ -1,14 +1,11 @@
 package serg.home.bitcoinSimple.network.model;
 
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 
-import java.math.BigInteger;
 import java.util.BitSet;
 
-public class IpAddress implements BinaryEncoded, BinaryDecoded {
+public class IpAddress implements BinaryEncoded {
     static int toInt(String dottedDecimal) {
         int byte1 = 0;
         int value = 0;
@@ -34,16 +31,6 @@ public class IpAddress implements BinaryEncoded, BinaryDecoded {
 
     public IpAddress(String value) {
         this.value = toInt(value);
-    }
-
-    public IpAddress(ByteReader byteReader) {
-        decode(byteReader);
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        Bytes next = byteReader.next(16);
-        this.value = new BigInteger(next.subArray(12, 16).byteArray()).intValue();
     }
 
     @Override

@@ -2,17 +2,23 @@ package serg.home.bitcoinSimple.blockchain.block.transaction.script;
 
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.VarInt;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Script implements BinaryEncoded, BinaryDecoded {
+public class Script implements BinaryEncoded {
+    public static Script p2pkh(Bytes publicKeyHash) {
+        return new Script().__(OP.DUP).__(OP.HASH160).__(publicKeyHash).__(OP.EQUALVERIFY).__(OP.CHECKSIG);
+    }
+
     private List<Object> items = new ArrayList<>();
 
     public Script() {
+    }
+    // TODO
+    public Script(List<Object> items) {
+        this.items = items;
     }
 
     public Script __(OP op) {
@@ -28,24 +34,6 @@ public class Script implements BinaryEncoded, BinaryDecoded {
             throw new UnsupportedOperationException();
         }
         return this;
-    }
-
-    public Script(ByteReader byteReader) {
-        decode(byteReader);
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        int scriptLength = byteReader.nextVarInt().toInt();
-        for (int i = 0; i < scriptLength; i++) {
-            byte b = byteReader.nextByte();
-            if (b >= 1 && b <= 75) {
-                items.add(byteReader.next(b));
-                i+=b;
-            } else {
-                items.add(OP.from(b));
-            }
-        }
     }
 
     @Override
@@ -68,5 +56,12 @@ public class Script implements BinaryEncoded, BinaryDecoded {
         }
         VarInt varInt = new VarInt(res.length);
         return varInt.encode().concat(new Bytes(res));
+    }
+
+    @Override
+    public String toString() {
+        return "Script{" +
+                "items=" + items +
+                '}';
     }
 }

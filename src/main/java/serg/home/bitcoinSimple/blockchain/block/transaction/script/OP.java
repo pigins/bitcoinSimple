@@ -1,23 +1,25 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.script;
 
-import serg.home.bitcoinSimple.common.binary.ByteReader;
-
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 public enum OP {
     DUP((byte) 118),
     HASH160((byte) (169 - 256)),
     EQUALVERIFY((byte) (136 - 256)),
-    CHECKSIG((byte) (172 - 256));
+    CHECKSIG((byte) (172 - 256)),
+    NOT_FOUND((byte) (243-256));
 
-    public static OP decode(ByteReader byteReader) {
-        byte value = byteReader.nextByte();
-        return Arrays.stream(OP.values()).filter(op -> op.code == value).findAny().get();
-    }
     public static OP from(byte b) {
-        return Arrays.stream(OP.values()).filter(op -> op.code == b).findAny().get();
+        try {
+            return Arrays.stream(OP.values())
+                    .filter(op -> op.code == b)
+                    .findAny()
+                    .orElseThrow((Supplier<Throwable>) () -> new RuntimeException("can't find OP code for[" + b + "]"));
+        } catch (Throwable throwable) {
+            return OP.NOT_FOUND;
+        }
     }
-
 
     private byte code;
 

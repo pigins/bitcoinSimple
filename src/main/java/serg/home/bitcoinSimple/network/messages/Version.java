@@ -1,7 +1,6 @@
 package serg.home.bitcoinSimple.network.messages;
 
 import serg.home.bitcoinSimple.common.*;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 import serg.home.bitcoinSimple.network.model.*;
 import serg.home.bitcoinSimple.network.peer.connection.Peer;
@@ -37,14 +36,6 @@ public class Version implements Payload {
         return protocolVersion;
     }
 
-    public Version(Bytes bytes) {
-        decode(new ByteReader(bytes));
-    }
-
-    public Version(ByteReader byteReader) {
-        decode(byteReader);
-    }
-
     public TimestampWithAddress fromAddressWithTimestamp() {
         return new TimestampWithAddress(timestamp.getValue(), fromNetAddress);
     }
@@ -56,19 +47,6 @@ public class Version implements Payload {
     @Override
     public String name() {
         return NAME;
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        protocolVersion = new ProtocolVersion(byteReader);
-        services = new Services(byteReader);
-        timestamp = new Timestamp8(byteReader);
-        toNetAddress = new NetAddress(byteReader);
-        fromNetAddress = new NetAddress(byteReader);
-        uNonce = byteReader.nextLong();
-        userAgent = byteReader.nextVarString();
-        uStartHeight = byteReader.nextIntLE();
-        relay = (byteReader.nextByte() == 1);
     }
 
     @Override

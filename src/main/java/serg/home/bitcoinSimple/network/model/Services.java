@@ -1,26 +1,28 @@
 package serg.home.bitcoinSimple.network.model;
 
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Services extends HashSet<Service> implements BinaryEncoded, BinaryDecoded {
-
-    public Services(long services) {
-        decode(services);
-    }
+public class Services extends HashSet<Service> implements BinaryEncoded {
 
     public Services(Service... services) {
         this.addAll(Arrays.asList(services));
     }
 
-    public Services(ByteReader byteReader) {
-        decode(byteReader);
+    public Services(long services) {
+        this.addAll(Arrays.stream(Service.values())
+                .filter(value -> (services & (1L << Long.numberOfTrailingZeros(value.getValue()))) != 0)
+                .distinct()
+                .collect(Collectors.toCollection(Services::new)));
+    }
+
+    public Services(Set<Service> services) {
+        this.addAll(services);
     }
 
     public long asLong() {
@@ -28,19 +30,7 @@ public class Services extends HashSet<Service> implements BinaryEncoded, BinaryD
     }
 
     @Override
-    public void decode(ByteReader byteReader) {
-        long l = byteReader.nextLongLE();
-        decode(l);
-    }
-
-    @Override
     public Bytes encode() {
         return Bytes.fromLongToLE(asLong());
-    }
-
-    private void decode(long services) {
-        this.addAll(Arrays.stream(Service.values())
-                .filter(value -> (services & (1L << Long.numberOfTrailingZeros(value.getValue()))) != 0)
-                .collect(Collectors.toSet()));
     }
 }

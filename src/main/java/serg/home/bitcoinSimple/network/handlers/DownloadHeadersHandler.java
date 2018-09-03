@@ -4,14 +4,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import serg.home.bitcoinSimple.blockchain.LocalBlockchain;
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.network.messages.CheckedMessage;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 import serg.home.bitcoinSimple.network.messages.GetHeaders;
 import serg.home.bitcoinSimple.network.messages.Headers;
 import serg.home.bitcoinSimple.network.model.ProtocolVersion;
 
 import java.util.List;
 // https://bitcoin.org/en/developer-guide#initial-block-download
-public class DownloadHeadersHandler extends SimpleChannelInboundHandler<CheckedMessage> {
+public class DownloadHeadersHandler extends SimpleChannelInboundHandler<BtcMessage> {
     private LocalBlockchain localBlockchain;
     private ProtocolVersion protocolVersion;
 
@@ -27,9 +27,9 @@ public class DownloadHeadersHandler extends SimpleChannelInboundHandler<CheckedM
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, CheckedMessage msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
         if (msg.getCommand().equals(Headers.NAME)) {
-            Headers headers = new Headers(msg.payload());
+            Headers headers = msg.nextHeaders();
             if (!headers.sizeLessThenMax()) {
                 localBlockchain.addHeaders(headers.blockHeaders());
                 List<Bytes> locator = localBlockchain.locator();

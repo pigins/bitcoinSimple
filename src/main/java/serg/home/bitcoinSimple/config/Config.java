@@ -23,7 +23,7 @@ public class Config {
         return dbConfig;
     }
 
-    public NetConfig net() {
-        return new NetConfig();
+    public TestnetConfig net() {
+        return new TestnetConfig();
     }
 }

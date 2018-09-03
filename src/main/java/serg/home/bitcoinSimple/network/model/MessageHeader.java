@@ -1,14 +1,12 @@
 package serg.home.bitcoinSimple.network.model;
 
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 import java.nio.charset.StandardCharsets;
 
-public class MessageHeader implements BinaryEncoded, BinaryDecoded {
+public class MessageHeader implements BinaryEncoded {
 
     /**
      * Magic value indicating message origin network, and used to seek to next message when stream state is unknown
@@ -21,8 +19,11 @@ public class MessageHeader implements BinaryEncoded, BinaryDecoded {
     private int payloadSize;
     private Bytes checksum;
 
-    public MessageHeader(ByteReader byteReader) {
-        decode(byteReader);
+    public MessageHeader(Network network, String command, int payloadSize, Bytes checksum) {
+        this.network = network;
+        this.command = command;
+        this.payloadSize = payloadSize;
+        this.checksum = checksum;
     }
 
     public MessageHeader(Network network, String command, Bytes payload) {
@@ -32,7 +33,11 @@ public class MessageHeader implements BinaryEncoded, BinaryDecoded {
         this.checksum = payload.doubleSha256().subArray(0, 4);
     }
 
-    public Network getNetwork() {
+    public boolean sameNetwork(Network network) {
+        return this.network.equals(network);
+    }
+
+    public Network network() {
         return network;
     }
 
@@ -46,14 +51,6 @@ public class MessageHeader implements BinaryEncoded, BinaryDecoded {
 
     public Bytes getChecksum() {
         return checksum;
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        this.network = Network.decode(byteReader);
-        this.command = new String(byteReader.next(12).byteArray(), StandardCharsets.US_ASCII).trim();
-        this.payloadSize = byteReader.nextIntLE();
-        this.checksum = byteReader.next(4);
     }
 
     @Override

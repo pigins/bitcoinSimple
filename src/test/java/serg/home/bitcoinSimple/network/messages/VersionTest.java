@@ -5,8 +5,8 @@ import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.NetAddress;
 import serg.home.bitcoinSimple.network.model.Timestamp8;
 import serg.home.bitcoinSimple.network.model.VarString;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 import serg.home.bitcoinSimple.network.model.*;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,8 +36,8 @@ class VersionTest {
 
     @Test
     void compare() {
-        System.out.println(new Version(new ByteReader(new Bytes(TESTNET_PAYLOAD))));
-        System.out.println(new Version(new ByteReader(new Bytes(APP_PAYLOAD))));
+        System.out.println(new BtcMessage(new Bytes(TESTNET_PAYLOAD)).nextVersion());
+        System.out.println(new BtcMessage(new Bytes(APP_PAYLOAD)).nextVersion());
     }
 
     @Test
@@ -65,7 +65,7 @@ class VersionTest {
 
     @Test
     void payloadDecode() {
-        Version payload = new Version(new ByteReader(new Bytes(VERSION_PAYLOAD)));
+        Version payload = new BtcMessage(new Bytes(VERSION_PAYLOAD)).nextVersion();
         assertEquals(VERSION_PAYLOAD, payload.encode().getHexString());
     }
 

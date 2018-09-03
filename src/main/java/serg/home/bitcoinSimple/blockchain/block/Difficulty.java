@@ -1,15 +1,13 @@
 package serg.home.bitcoinSimple.blockchain.block;
 
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-public class Difficulty implements BinaryEncoded, BinaryDecoded {
+public class Difficulty implements BinaryEncoded {
     private static BigInteger DIFFICULTY_1_TARGET_B = new BigInteger("00000000FFFF0000000000000000000000000000000000000000000000000000", 16);
     private static BigInteger DIFFICULTY_1_TARGET_P = new BigInteger("00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16);
 
@@ -20,10 +18,6 @@ public class Difficulty implements BinaryEncoded, BinaryDecoded {
             throw new IllegalArgumentException();
         }
         this.bits = bits;
-    }
-
-    public Difficulty(ByteReader byteReader) {
-        decode(byteReader);
     }
 
     public BigInteger target() {
@@ -45,11 +39,6 @@ public class Difficulty implements BinaryEncoded, BinaryDecoded {
 
     private BigDecimal diff(BigInteger diff1target) {
         return new BigDecimal(diff1target).divide(new BigDecimal(target()), 12, RoundingMode.DOWN);
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        bits = byteReader.next(4).flip();
     }
 
     @Override

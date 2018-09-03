@@ -2,7 +2,6 @@ package serg.home.bitcoinSimple.network.messages;
 
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.VarString;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 import javax.annotation.Nullable;
@@ -65,10 +64,6 @@ public class Reject implements Payload {
         this.data = Objects.requireNonNullElseGet(data, Bytes::new);
     }
 
-    public Reject(ByteReader byteReader) {
-        decode(byteReader);
-    }
-
     public String getMessage() {
         return message;
     }
@@ -88,14 +83,6 @@ public class Reject implements Payload {
     @Override
     public String name() {
         return NAME;
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        this.message = byteReader.nextVarString().getValue();
-        this.ccode = CCODES.from(byteReader.nextByte());
-        this.reason = byteReader.nextVarString().getValue();
-        this.data = byteReader.next(32);
     }
 
     @Override

@@ -2,7 +2,7 @@ package serg.home.bitcoinSimple.network.messages;
 
 import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +18,7 @@ class RejectTest {
 
     @Test
     void decode() {
-        Reject reject = new Reject(new ByteReader(new Bytes(rejectPayload)));
+        Reject reject = new BtcMessage(new Bytes(rejectPayload)).nextReject();
         assertEquals("tx", reject.getMessage());
         assertEquals(Reject.CCODES.REJECT_DUPLICATE, reject.getCcode());
         assertEquals("bad-txns-inputs-spent", reject.getReason());

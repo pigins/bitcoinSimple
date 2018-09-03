@@ -2,6 +2,7 @@ package serg.home.bitcoinSimple.blockchain.block;
 
 import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.common.Bytes;
+import serg.home.bitcoinSimple.config.MainnetConfig;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,8 +30,8 @@ class MainnetGenesisBlockTest {
     @Test
     void encode() {
         String genesisHash = "000000000019D6689C085AE165831E934FF763AE46A2A6C172B3F1B60A8CE26F";
-//        GenesisBlock genesisBlock = new GenesisBlock();
-//        assertEquals(genesisBinary, genesisBlock.encode().getHexString());
-//        assertEquals(genesisHash, new Bytes(headerBinary).doubleSha256().flip().getHexString());
+        Block genesisBlock = new MainnetConfig().genesis();
+        assertEquals(genesisBinary, genesisBlock.encode().getHexString());
+        assertEquals(genesisHash, new Bytes(headerBinary).doubleSha256().flip().getHexString());
     }
 }

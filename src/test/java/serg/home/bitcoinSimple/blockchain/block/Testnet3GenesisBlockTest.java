@@ -11,6 +11,7 @@ import serg.home.bitcoinSimple.blockchain.block.transaction.output.Value;
 import serg.home.bitcoinSimple.blockchain.block.transaction.script.OP;
 import serg.home.bitcoinSimple.blockchain.block.transaction.script.Script;
 import serg.home.bitcoinSimple.common.Bytes;
+import serg.home.bitcoinSimple.config.TestnetConfig;
 import serg.home.bitcoinSimple.network.model.Timestamp4;
 
 import java.util.Collections;
@@ -97,11 +98,11 @@ class Testnet3GenesisBlockTest {
         Block testnet3GenesisBlock = new Block(blockHeader, transactions);
         System.out.println("mercle root");
 //        "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b";
-        System.out.println(testnet3GenesisBlock.mercleRoot());
+//        System.out.println(testnet3GenesisBlock.mercleRoot());
 
         String genesisHash = "000000000019D6689C085AE165831E934FF763AE46A2A6C172B3F1B60A8CE26F";
-//        GenesisBlock genesisBlock = new GenesisBlock();
-//        assertEquals(genesisBinary, genesisBlock.encode().getHexString());
-//        assertEquals(genesisHash, new Bytes(headerBinary).doubleSha256().flip().getHexString());
+        Block genesis = new TestnetConfig().genesis();
+        assertEquals(genesisBinary, genesis.encode().getHexString());
+        assertEquals(genesisHash, new Bytes(headerBinary).doubleSha256().flip().getHexString());
     }
 }

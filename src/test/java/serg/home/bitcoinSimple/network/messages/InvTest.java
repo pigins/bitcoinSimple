@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.InvType;
 import serg.home.bitcoinSimple.network.model.InvVector;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ class InvTest {
 
     @Test
     void decode() {
-        Inv inv = new Inv(new Bytes(GETBLOCKS_PAYLOAD));
+        Inv inv = new BtcMessage(new Bytes(GETBLOCKS_PAYLOAD)).nextInv();
         assertEquals(2, inv.invVectors().size());
         assertEquals(inv.invVectors().get(0).type(), InvType.MSG_TX);
         assertEquals(

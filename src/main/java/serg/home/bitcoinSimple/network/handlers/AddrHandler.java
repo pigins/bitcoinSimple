@@ -6,10 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import serg.home.bitcoinSimple.network.knownAddresses.KnownAddresses;
 import serg.home.bitcoinSimple.network.messages.Addr;
-import serg.home.bitcoinSimple.network.messages.CheckedMessage;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 import serg.home.bitcoinSimple.network.messages.GetAddr;
 
-public class AddrHandler extends SimpleChannelInboundHandler<CheckedMessage> {
+public class AddrHandler extends SimpleChannelInboundHandler<BtcMessage> {
     private static Logger logger = LogManager.getLogger();
 
     private final KnownAddresses knownAddresses;
@@ -19,9 +19,9 @@ public class AddrHandler extends SimpleChannelInboundHandler<CheckedMessage> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, CheckedMessage msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
         if (msg.getCommand().equals(Addr.NAME)) {
-            Addr addr = new Addr(msg.payload());
+            Addr addr = msg.nextAddr();
             knownAddresses.put(addr.getAddrList());
             logger.trace(addr);
         } else if (msg.getCommand().equals(GetAddr.NAME)) {

@@ -3,7 +3,7 @@ package serg.home.bitcoinSimple.blockchain.block;
 import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.Timestamp4;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 
 import static org.junit.jupiter.api.Assertions.*;
 class BlockHeaderTest {
@@ -26,10 +26,9 @@ class BlockHeaderTest {
 
     @Test
     void decode() {
-        ByteReader byteReader = new ByteReader(new Bytes(
+        BlockHeader blockHeader = new BtcMessage(new Bytes(
                 "0100000000000000000000000000000000000000000000000000000000000000000000003BA3EDFD7A7B12B27AC72C3E67768F617FC81BC3888A51323A9FB8AA4B1E5E4A29AB5F49FFFF001D1DAC2B7C"
-        ));
-        BlockHeader blockHeader = new BlockHeader(byteReader);
+        )).nextBlockHeader();
         assertEquals(
                 "0100000000000000000000000000000000000000000000000000000000000000000000003BA3EDFD7A7B12B27AC72C3E67768F617FC81BC3888A51323A9FB8AA4B1E5E4A29AB5F49FFFF001D1DAC2B7C",
                 blockHeader.encode().getHexString()

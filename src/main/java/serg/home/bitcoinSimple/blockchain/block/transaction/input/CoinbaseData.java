@@ -2,15 +2,13 @@ package serg.home.bitcoinSimple.blockchain.block.transaction.input;
 
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.VarInt;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class CoinbaseData implements BinaryEncoded, BinaryDecoded {
+public class CoinbaseData implements BinaryEncoded {
     public static final int MIN_SIZE = 2;
     public static final int MAX_SIZE = 100;
 
@@ -32,16 +30,6 @@ public class CoinbaseData implements BinaryEncoded, BinaryDecoded {
         }
     }
 
-    public CoinbaseData(ByteReader byteReader) {
-        decode(byteReader);
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        int dataSize = byteReader.nextVarInt().toInt();
-        this.bytes = byteReader.next(dataSize);
-    }
-
     @Override
     public Bytes encode() {
         CompoundBinary compoundBinary = new CompoundBinary();
@@ -57,5 +45,13 @@ public class CoinbaseData implements BinaryEncoded, BinaryDecoded {
                     .add(bytes)
                     .encode();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "CoinbaseData{" +
+                "blockHeight=" + blockHeight +
+                ", bytes=" + bytes +
+                '}';
     }
 }

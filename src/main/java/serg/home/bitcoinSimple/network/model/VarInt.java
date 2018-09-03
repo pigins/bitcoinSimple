@@ -1,64 +1,21 @@
 package serg.home.bitcoinSimple.network.model;
 
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class VarInt implements BinaryEncoded, BinaryDecoded {
+public class VarInt implements BinaryEncoded {
     private long value;
 
     public VarInt(long value) {
         this.value = value;
     }
 
-    public VarInt(ByteReader byteReader) {
-        decode(byteReader);
-    }
-
     public int toInt() {
         return (int)value;
-    }
-
-    @Override
-    public void decode(ByteReader byteReader) {
-        byte b = byteReader.nextByte();
-        if (Byte.compareUnsigned(((byte) 0xfc), b) > 0) {
-            value = b;
-        } else if (Byte.compareUnsigned(((byte) 0xfd), b) == 0) {
-            ByteBuffer buf = ByteBuffer.allocate(2);
-            buf.order(ByteOrder.LITTLE_ENDIAN);
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.rewind();
-            value = buf.getShort();
-        } else if (Byte.compareUnsigned(((byte) 0xfe), b) == 0) {
-            ByteBuffer buf = ByteBuffer.allocate(4);
-            buf.order(ByteOrder.LITTLE_ENDIAN);
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.rewind();
-            value = buf.getInt();
-        } else {
-            ByteBuffer buf = ByteBuffer.allocate(8);
-            buf.order(ByteOrder.LITTLE_ENDIAN);
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.put(byteReader.nextByte());
-            buf.rewind();
-            value = buf.getLong();
-        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package serg.home.bitcoinSimple.network.messages;
 import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.ProtocolVersion;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +12,7 @@ class GetHeadersTest {
 
     @Test
     void decode() {
-        GetHeaders getHeaders = new GetHeaders(new Bytes(FIRST_GET_HEADERS));
+        GetHeaders getHeaders = new BtcMessage(new Bytes(FIRST_GET_HEADERS)).nextGetHeaders();
         assertEquals(new ProtocolVersion(70015), getHeaders.protocolVersion());
         assertEquals(1, getHeaders.hashes().size());
         assertEquals(

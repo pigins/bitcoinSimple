@@ -11,7 +11,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import serg.home.bitcoinSimple.blockchain.LocalBlockchain;
-import serg.home.bitcoinSimple.config.NetConfig;
+import serg.home.bitcoinSimple.config.TestnetConfig;
 import serg.home.bitcoinSimple.network.handlers.DownloadHeadersHandler;
 import serg.home.bitcoinSimple.network.knownAddresses.KnownAddresses;
 import serg.home.bitcoinSimple.network.messages.GetAddr;
@@ -23,14 +23,14 @@ import java.util.concurrent.TimeUnit;
 public class Clients implements Runnable {
     private static Logger logger = LogManager.getLogger();
 
-    private final NetConfig config;
+    private final TestnetConfig config;
     private final KnownAddresses knownAddresses;
     private final EventLoopGroup workerGroup;
     private final LocalBlockchain localBlockchain;
     private final EventLoopGroup connectGroup = new NioEventLoopGroup();
     private ChannelGroup activeClients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    Clients(NetConfig config, EventLoopGroup workerGroup, KnownAddresses knownAddresses, LocalBlockchain localBlockchain) {
+    Clients(TestnetConfig config, EventLoopGroup workerGroup, KnownAddresses knownAddresses, LocalBlockchain localBlockchain) {
         this.config = config;
         this.knownAddresses = knownAddresses;
         this.workerGroup = workerGroup;

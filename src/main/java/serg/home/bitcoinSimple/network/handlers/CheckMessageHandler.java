@@ -4,10 +4,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 import serg.home.bitcoinSimple.network.exceptions.DifferentNetworks;
 import serg.home.bitcoinSimple.network.exceptions.InvalidMessageChecksum;
-import serg.home.bitcoinSimple.network.messages.CheckedMessage;
 import serg.home.bitcoinSimple.network.model.MessageHeader;
 import serg.home.bitcoinSimple.network.model.*;
 
@@ -24,8 +23,11 @@ public class CheckMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
         byte[] headerBytes = new byte[24];
         msg.readBytes(headerBytes);
-        MessageHeader messageHeader = new MessageHeader(new ByteReader(new Bytes(headerBytes)));
-        if (!messageHeader.getNetwork().equals(network)) {
+
+        // FIXME
+        BtcMessage btcMessage = new BtcMessage(new Bytes(headerBytes));
+        MessageHeader messageHeader = btcMessage.nextMessageHeader();
+        if (!messageHeader.sameNetwork(network)) {
             throw new DifferentNetworks(messageHeader.getCommand());
         }
 
@@ -36,7 +38,6 @@ public class CheckMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
         if (!checksum.equals(messageHeader.getChecksum())) {
             throw new InvalidMessageChecksum(messageHeader.getCommand());
         }
-
-        ctx.fireChannelRead(new CheckedMessage(messageHeader.getCommand(), payload));
+        ctx.fireChannelRead(new BtcMessage(messageHeader.getCommand(), payload));
     }
 }

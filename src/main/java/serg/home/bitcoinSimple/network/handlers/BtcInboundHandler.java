@@ -2,16 +2,16 @@ package serg.home.bitcoinSimple.network.handlers;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import serg.home.bitcoinSimple.network.messages.CheckedMessage;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 import serg.home.bitcoinSimple.network.peer.connection.BtcNioChannel;
 
-public abstract class BtcInboundHandler extends SimpleChannelInboundHandler<CheckedMessage> {
+public abstract class BtcInboundHandler extends SimpleChannelInboundHandler<BtcMessage> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, CheckedMessage msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
         btcMessage(ctx, msg, (BtcNioChannel) ctx.channel());
     }
-    abstract void btcMessage(ChannelHandlerContext ctx, CheckedMessage msg, BtcNioChannel channel) throws Exception;
+    abstract void btcMessage(ChannelHandlerContext ctx, BtcMessage msg, BtcNioChannel channel) throws Exception;
 
 //    @Override
 //    public void channelActive(ChannelHandlerContext ctx) throws Exception {

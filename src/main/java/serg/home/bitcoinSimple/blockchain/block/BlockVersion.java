@@ -2,9 +2,6 @@ package serg.home.bitcoinSimple.blockchain.block;
 
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
-
-import java.util.Arrays;
 
 // https://data.bitcoinity.org/bitcoin/block_version/all?c=block_version&r=month&t=a
 public enum BlockVersion implements BinaryEncoded {
@@ -16,9 +13,8 @@ public enum BlockVersion implements BinaryEncoded {
         this.uCode = uCode;
     }
 
-    public static BlockVersion decode(ByteReader byteReader) {
-        int value = byteReader.nextIntLE();
-        return Arrays.stream(BlockVersion.values()).filter(blockVersion -> blockVersion.uCode == value).findAny().get();
+    public int getuCode() {
+        return uCode;
     }
 
     @Override

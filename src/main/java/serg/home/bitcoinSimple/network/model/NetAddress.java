@@ -1,9 +1,7 @@
 package serg.home.bitcoinSimple.network.model;
 
 import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 import java.net.InetSocketAddress;
@@ -11,18 +9,10 @@ import java.net.InetSocketAddress;
 /**
  * https://en.bitcoin.it/wiki/Protocol_documentation#Network_address
  */
-public class NetAddress implements BinaryEncoded, BinaryDecoded {
+public class NetAddress implements BinaryEncoded {
     private Services services;
-    private InetSocketAddress address;
     private IpAddress ipAddress;
     private int port;
-
-
-    public NetAddress(long services, int ipAddress, short port) {
-        this.services = new Services(services);
-        this.ipAddress = new IpAddress(ipAddress);
-        this.port = Short.toUnsignedInt(port);
-    }
 
     public NetAddress(Services services, IpAddress ipAddress, int port) {
         this.services = services;
@@ -30,8 +20,10 @@ public class NetAddress implements BinaryEncoded, BinaryDecoded {
         this.port = port;
     }
 
-    public NetAddress(ByteReader byteReader) {
-        decode(byteReader);
+    public NetAddress(long services, int ipAddress, short port) {
+        this.services = new Services(services);
+        this.ipAddress = new IpAddress(ipAddress);
+        this.port = Short.toUnsignedInt(port);
     }
 
     public Services services() {
@@ -51,13 +43,6 @@ public class NetAddress implements BinaryEncoded, BinaryDecoded {
     }
 
     @Override
-    public void decode(ByteReader byteReader) {
-        services = byteReader.nextServices();
-        ipAddress = new IpAddress(byteReader);
-        port = Short.toUnsignedInt(byteReader.nextShort());
-    }
-
-    @Override
     public Bytes encode() {
         CompoundBinary compoundBinary = new CompoundBinary();
         compoundBinary.add(services);
@@ -72,8 +57,6 @@ public class NetAddress implements BinaryEncoded, BinaryDecoded {
         }
         return compoundBinary.encode();
     }
-
-
 
     @Override
     public String toString() {

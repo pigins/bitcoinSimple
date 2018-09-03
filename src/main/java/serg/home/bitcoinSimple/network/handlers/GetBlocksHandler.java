@@ -6,7 +6,7 @@ import serg.home.bitcoinSimple.blockchain.LocalBlockchain;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.InvType;
 import serg.home.bitcoinSimple.network.model.InvVector;
-import serg.home.bitcoinSimple.network.messages.CheckedMessage;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 import serg.home.bitcoinSimple.network.messages.GetBlocks;
 import serg.home.bitcoinSimple.network.messages.Inv;
 import serg.home.bitcoinSimple.network.model.ProtocolVersion;
@@ -16,7 +16,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
-public class GetBlocksHandler extends SimpleChannelInboundHandler<CheckedMessage> {
+public class GetBlocksHandler extends SimpleChannelInboundHandler<BtcMessage> {
     private final LocalBlockchain localBlockchain;
     private final ProtocolVersion protocolVersion;
 
@@ -59,9 +59,9 @@ public class GetBlocksHandler extends SimpleChannelInboundHandler<CheckedMessage
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, final CheckedMessage msg) {
+    public void channelRead0(ChannelHandlerContext ctx, final BtcMessage msg) {
         if (msg.getCommand().equals(Inv.NAME)) {
-            Inv inv = new Inv(msg.payload());
+            Inv inv = msg.nextInv();
             List<Bytes> hashes = inv.invVectors().stream()
                     .filter(invVector -> invVector.type().equals(InvType.MSG_BLOCK))
                     .map(InvVector::hash)

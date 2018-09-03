@@ -4,6 +4,7 @@ import io.netty.channel.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import serg.home.bitcoinSimple.blockchain.LocalBlockchain;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 import serg.home.bitcoinSimple.network.model.NetAddress;
 import serg.home.bitcoinSimple.network.model.Timestamp8;
 import serg.home.bitcoinSimple.network.model.VarString;
@@ -12,7 +13,6 @@ import serg.home.bitcoinSimple.network.peer.connection.Peer;
 import serg.home.bitcoinSimple.network.exceptions.CommandBeforeHandshake;
 import serg.home.bitcoinSimple.network.exceptions.HandshakeAlreadyDone;
 import serg.home.bitcoinSimple.network.exceptions.Obsolete;
-import serg.home.bitcoinSimple.network.messages.CheckedMessage;
 import serg.home.bitcoinSimple.network.messages.Verack;
 import serg.home.bitcoinSimple.network.messages.Version;
 import serg.home.bitcoinSimple.network.model.*;
@@ -20,7 +20,7 @@ import serg.home.bitcoinSimple.network.model.*;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class HandshakeHandler extends SimpleChannelInboundHandler<CheckedMessage> {
+public class HandshakeHandler extends SimpleChannelInboundHandler<BtcMessage> {
     private static Logger logger = LogManager.getLogger();
 
     private ProtocolVersion appProtocolVersion;
@@ -73,13 +73,13 @@ public class HandshakeHandler extends SimpleChannelInboundHandler<CheckedMessage
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, CheckedMessage msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
         logger.trace(msg);
         if (handshake.success() && !isHandshakeCommand(msg.getCommand())) {
             ctx.fireChannelRead(msg);
         } else if (!handshake.success() && isHandshakeCommand(msg.getCommand())) {
             if (msg.getCommand().equals(Version.NAME)) {
-                Version versionPayload = new Version(msg.payload());
+                Version versionPayload = msg.nextVersion();
                 versionPayload.protocolVersion();
                 remotePeer = versionPayload.peer();
                 handshake.remoteVersionReceived(versionPayload.protocolVersion());

@@ -1,13 +1,11 @@
 package serg.home.bitcoinSimple.blockchain.block;
 
 import serg.home.bitcoinSimple.network.model.Timestamp4;
-import serg.home.bitcoinSimple.common.binary.BinaryDecoded;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.ByteReader;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
-public class BlockHeader implements BinaryEncoded, BinaryDecoded {
+public class BlockHeader implements BinaryEncoded {
     private static Bytes ZERO_BYTE = new Bytes("00");
     private BlockVersion blockVersion;
     private Bytes previousBlockHash;
@@ -15,6 +13,12 @@ public class BlockHeader implements BinaryEncoded, BinaryDecoded {
     private Timestamp4 date;
     private Difficulty difficulty;
     private int uNonce;
+    private boolean withZeroByte;
+
+    public BlockHeader(BlockVersion blockVersion, Bytes previousBlockHash, Bytes mercleRoot, Timestamp4 date, Difficulty difficulty, int uNonce, boolean withZeroByte) {
+        this(blockVersion, previousBlockHash, mercleRoot, date, difficulty, uNonce);
+        this.withZeroByte = withZeroByte;
+    }
 
     public BlockHeader(BlockVersion blockVersion, Bytes previousBlockHash, Bytes mercleRoot, Timestamp4 date, Difficulty difficulty, int uNonce) {
         this.blockVersion = blockVersion;
@@ -23,10 +27,7 @@ public class BlockHeader implements BinaryEncoded, BinaryDecoded {
         this.date = date;
         this.difficulty = difficulty;
         this.uNonce = uNonce;
-    }
-
-    public BlockHeader(ByteReader byteReader) {
-        decode(byteReader);
+        this.withZeroByte = true;
     }
 
     public BlockVersion getBlockVersion() {
@@ -58,31 +59,19 @@ public class BlockHeader implements BinaryEncoded, BinaryDecoded {
     }
 
     @Override
-    public void decode(ByteReader byteReader) {
-        this.blockVersion = BlockVersion.decode(byteReader);
-        this.previousBlockHash = byteReader.next(32);
-        this.mercleRoot = byteReader.next(32).flip();
-        this.date = new Timestamp4(byteReader);
-        this.difficulty = new Difficulty(byteReader);
-        this.uNonce = byteReader.nextIntLE();
-        var txCount = byteReader.nextByte();
-        if (txCount != 0) {
-            throw new IllegalArgumentException("tx count should be always zero");
-        }
-    }
-
-    @Override
     public Bytes encode() {
-
-        return new CompoundBinary()
+        CompoundBinary compoundBinary = new CompoundBinary();
+        compoundBinary
                 .add(blockVersion)
                 .add(previousBlockHash)
                 .add(mercleRoot.flip())
                 .add(date)
                 .add(difficulty)
-                .add(Bytes.fromIntLE(uNonce))
-                .add(ZERO_BYTE)
-                .encode();
+                .add(Bytes.fromIntLE(uNonce));
+        if (withZeroByte) {
+            compoundBinary.add(ZERO_BYTE);
+        }
+        return compoundBinary.encode();
     }
 
     private Timestamp4 currentDate() {
@@ -93,11 +82,12 @@ public class BlockHeader implements BinaryEncoded, BinaryDecoded {
     public String toString() {
         return "BlockHeader{" +
                 "blockVersion=" + blockVersion +
-                ", previousBlockHash=" + previousBlockHash +
+                ", previousBlockHash=" + previousBlockHash.flip().getHexString().toLowerCase() +
                 ", mercleRoot=" + mercleRoot +
                 ", date=" + date +
                 ", difficulty=" + difficulty +
                 ", uNonce=" + uNonce +
+                ", withZeroByte=" + withZeroByte +
                 '}';
     }
 }

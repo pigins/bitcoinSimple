@@ -5,7 +5,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import serg.home.bitcoinSimple.blockchain.LocalBlockchain;
-import serg.home.bitcoinSimple.config.NetConfig;
+import serg.home.bitcoinSimple.config.TestnetConfig;
 import serg.home.bitcoinSimple.database.Database;
 import serg.home.bitcoinSimple.network.knownAddresses.ConfigKnownAddresses;
 import serg.home.bitcoinSimple.network.knownAddresses.DbKnownAddresses;
@@ -17,7 +17,7 @@ import java.io.Closeable;
 public class Net implements Runnable, Closeable {
     private static Logger logger = LogManager.getLogger();
 
-    private final NetConfig config;
+    private final TestnetConfig config;
     private final Database database;
     private final Wallet wallet;
     private KnownAddresses knownAddresses;
@@ -26,7 +26,7 @@ public class Net implements Runnable, Closeable {
     private Clients clients;
     private EventLoopGroup workerGroup;
 
-    public Net(NetConfig config, Database database, Wallet wallet, LocalBlockchain localBlockchain) {
+    public Net(TestnetConfig config, Database database, Wallet wallet, LocalBlockchain localBlockchain) {
         this.config = config;
         this.database = database;
         this.wallet = wallet;

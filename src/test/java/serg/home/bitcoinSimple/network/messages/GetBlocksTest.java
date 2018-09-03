@@ -3,6 +3,7 @@ package serg.home.bitcoinSimple.network.messages;
 import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.ProtocolVersion;
+import serg.home.bitcoinSimple.protocol.BtcMessage;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ class GetBlocksTest {
 
     @Test
     void decode() {
-        GetBlocks getBlocks = new GetBlocks(new Bytes(GETBLOCKS_PAYLOAD));
+        GetBlocks getBlocks = new BtcMessage(new Bytes(GETBLOCKS_PAYLOAD)).nextGetBlocks();
         assertEquals(new ProtocolVersion(70001), getBlocks.protocolVersion());
         assertEquals(2, getBlocks.hashes().size());
         assertEquals(
