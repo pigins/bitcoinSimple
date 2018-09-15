@@ -1,5 +1,6 @@
 package serg.home.bitcoinSimple.blockchain.block;
 
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.blockchain.block.transaction.Transaction;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.messages.Payload;
@@ -12,6 +13,17 @@ import java.util.stream.Collectors;
 
 public class Block implements Payload {
     public static final String NAME = "block";
+    public static Block read(ByteBuf byteBuf) {
+        BlockHeader blockHeader = BlockHeader.read(byteBuf);
+        int txCount = (int)VarInt.read(byteBuf);
+        List<Transaction> transactions = new ArrayList<>(txCount);
+        transactions.add(Transaction.readCoinbaseTransaction(byteBuf));
+        for (int i = 0; i < txCount - 1; i++) {
+            Transaction e = Transaction.read(byteBuf);
+            transactions.add(e);
+        }
+        return new Block(blockHeader, transactions);
+    }
 
     private BlockHeader blockHeader;
     private List<Transaction> transactions;
@@ -19,8 +31,6 @@ public class Block implements Payload {
     public Block(BlockHeader blockHeader, List<Transaction> transactions) {
         this.blockHeader = blockHeader;
         this.transactions = transactions;
-        System.out.println(blockHeader.getMercleRoot());
-        System.out.println(mercleRoot());
     }
 
     public Bytes headerHash() {
@@ -58,10 +68,10 @@ public class Block implements Payload {
     }
 
     @Override
-    public Bytes encode() {
-        CompoundBinary compoundBinary = new CompoundBinary().add(blockHeader).add(new VarInt(transactions.size()));
-        transactions.forEach((compoundBinary::add));
-        return compoundBinary.encode();
+    public void write(ByteBuf byteBuf) {
+        blockHeader.write(byteBuf);
+        new VarInt(transactions.size()).write(byteBuf);
+        transactions.forEach(transaction -> transaction.write(byteBuf));
     }
 
     @Override

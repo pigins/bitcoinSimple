@@ -13,7 +13,7 @@ public class PongPongHandler extends SimpleChannelInboundHandler<BtcMessage> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
         if (msg.getCommand().equals(Ping.NAME)) {
-            Ping ping = msg.nextPing();
+            Ping ping = msg.ping();
             logger.trace(ping);
             ctx.writeAndFlush(new Pong(ping));
         } else if (msg.getCommand().equals(Pong.NAME)) {

@@ -1,9 +1,6 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction;
 
 import org.junit.jupiter.api.Test;
-import serg.home.bitcoinSimple.blockchain.block.transaction.output.Value;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ValueTest {
 

@@ -22,7 +22,7 @@ class GetBlocksTest {
 
     @Test
     void decode() {
-        GetBlocks getBlocks = new BtcMessage(new Bytes(GETBLOCKS_PAYLOAD)).nextGetBlocks();
+        GetBlocks getBlocks = new BtcMessage(new Bytes(GETBLOCKS_PAYLOAD)).getBlocks();
         assertEquals(new ProtocolVersion(70001), getBlocks.protocolVersion());
         assertEquals(2, getBlocks.hashes().size());
         assertEquals(

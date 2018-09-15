@@ -26,7 +26,7 @@ class AddrTest {
 
     @Test
     void decode() {
-        Addr addr = new BtcMessage(new Bytes(ADDR_PAYLOAD)).nextAddr();
+        Addr addr = new BtcMessage(new Bytes(ADDR_PAYLOAD)).addr();
         assertEquals(1, addr.getAddrList().size());
         assertEquals("2010-12-21T02:50:10Z", addr.getAddrList().get(0).getTimestamp().toString());
         assertEquals("10.0.0.1", addr.getAddrList().get(0).getAddress().ipAddress().getIpString());

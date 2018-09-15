@@ -1,17 +1,17 @@
 package serg.home.bitcoinSimple.network.messages;
 
-import serg.home.bitcoinSimple.common.Bytes;
+import io.netty.buffer.ByteBuf;
 
 public class Verack implements Payload {
     public static final String NAME = "verack";
 
     @Override
-    public Bytes encode() {
-        return new Bytes(new byte[0]);
+    public String name() {
+        return NAME;
     }
 
     @Override
-    public String name() {
-        return NAME;
+    public void write(ByteBuf byteBuf) {
+        /*NOPE*/
     }
 }

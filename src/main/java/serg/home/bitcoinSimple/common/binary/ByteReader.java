@@ -29,21 +29,21 @@ public class ByteReader {
         return bytes.byteArray()[readCount++];
     }
 
-    public VarInt nextVarInt() {
-        return new VarInt(this);
-    }
+//    public VarInt nextVarInt() {
+//        return new VarInt(this);
+//    }
 
-    public CoinbaseInput nextCoinbaseInput() {
-        return new CoinbaseInput(this);
-    }
+//    public CoinbaseInput nextCoinbaseInput() {
+//        return new CoinbaseInput(this);
+//    }
 
-    public RegularInput nextRegularInput() {
-        return new RegularInput(this);
-    }
+//    public RegularInput nextRegularInput() {
+//        return new RegularInput(this);
+//    }
 
-    public Output nextOutput() {
-        return new Output(this);
-    }
+//    public Output nextOutput() {
+//        return new Output(this);
+//    }
 
     public boolean hasNext() {
         return readCount < bytes.length();
@@ -92,13 +92,13 @@ public class ByteReader {
         return byteBuffer.getLong();
     }
 
-    public Services nextServices() {
-        return new Services(this);
-    }
+//    public Services nextServices() {
+//        return new Services(this);
+//    }
 
-    public VarString nextVarString() {
-        return new VarString(this);
-    }
+//    public VarString nextVarString() {
+//        return new VarString(this);
+//    }
 
     public long nextLong() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);

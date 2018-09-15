@@ -1,5 +1,6 @@
 package serg.home.bitcoinSimple.common;
 
+import io.netty.buffer.ByteBuf;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
 
@@ -14,8 +15,12 @@ import java.util.Objects;
 /**
  * wrapper for byte array with set of utility methods.
  */
-public class Bytes implements Serializable, BinaryEncoded {
+public class Bytes extends ByteBuf, BinaryEncoded {
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+    public Bytes(ByteBuf byteBuf) {
+        new Bytes(byteBuf.array());
+    }
 
     public static Bytes concat(Bytes... arrays) {
         int totalLength = 0;

@@ -36,8 +36,8 @@ class VersionTest {
 
     @Test
     void compare() {
-        System.out.println(new BtcMessage(new Bytes(TESTNET_PAYLOAD)).nextVersion());
-        System.out.println(new BtcMessage(new Bytes(APP_PAYLOAD)).nextVersion());
+        System.out.println(new BtcMessage(new Bytes(TESTNET_PAYLOAD)).version());
+        System.out.println(new BtcMessage(new Bytes(APP_PAYLOAD)).version());
     }
 
     @Test
@@ -65,7 +65,7 @@ class VersionTest {
 
     @Test
     void payloadDecode() {
-        Version payload = new BtcMessage(new Bytes(VERSION_PAYLOAD)).nextVersion();
+        Version payload = new BtcMessage(new Bytes(VERSION_PAYLOAD)).version();
         assertEquals(VERSION_PAYLOAD, payload.encode().getHexString());
     }
 

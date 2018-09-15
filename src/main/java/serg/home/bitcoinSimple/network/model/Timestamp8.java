@@ -1,10 +1,16 @@
 package serg.home.bitcoinSimple.network.model;
 
-import serg.home.bitcoinSimple.common.Bytes;
+import io.netty.buffer.ByteBuf;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 public class Timestamp8 extends Timestamp {
+
+    public static OffsetDateTime read(ByteBuf byteBuf) {
+        return Instant.ofEpochSecond(byteBuf.readLongLE()).atOffset(ZoneOffset.UTC);
+    }
 
     public Timestamp8(long v) {
         super(v);
@@ -19,7 +25,7 @@ public class Timestamp8 extends Timestamp {
     }
 
     @Override
-    public Bytes encode() {
-        return Bytes.fromLongToLE(value.toEpochSecond());
+    public void write(ByteBuf byteBuf) {
+        byteBuf.writeLongLE(value.toEpochSecond());
     }
 }

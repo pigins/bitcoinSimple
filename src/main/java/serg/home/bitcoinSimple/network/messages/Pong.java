@@ -1,9 +1,12 @@
 package serg.home.bitcoinSimple.network.messages;
 
-import serg.home.bitcoinSimple.common.Bytes;
+import io.netty.buffer.ByteBuf;
 
 public class Pong implements Payload {
     public static final String NAME = "pong";
+    public static Pong read(ByteBuf byteBuf) {
+        return new Pong(byteBuf.readLong());
+    }
     private long uNonce;
 
     public Pong(Ping ping) {
@@ -20,8 +23,8 @@ public class Pong implements Payload {
     }
 
     @Override
-    public Bytes encode() {
-        return Bytes.fromLong(uNonce);
+    public void write(ByteBuf byteBuf) {
+        byteBuf.writeLong(uNonce);
     }
 
     @Override

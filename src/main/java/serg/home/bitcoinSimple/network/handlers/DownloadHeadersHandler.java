@@ -29,7 +29,7 @@ public class DownloadHeadersHandler extends SimpleChannelInboundHandler<BtcMessa
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
         if (msg.getCommand().equals(Headers.NAME)) {
-            Headers headers = msg.nextHeaders();
+            Headers headers = msg.headers();
             if (!headers.sizeLessThenMax()) {
                 localBlockchain.addHeaders(headers.blockHeaders());
                 List<Bytes> locator = localBlockchain.locator();

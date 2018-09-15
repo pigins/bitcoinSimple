@@ -1,26 +1,44 @@
 package serg.home.bitcoinSimple.blockchain.block;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import serg.home.bitcoinSimple.network.model.Timestamp4;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
+import java.time.OffsetDateTime;
+
 public class BlockHeader implements BinaryEncoded {
+    public static BlockHeader read(ByteBuf byteBuf) {
+        return new BlockHeader(
+                BlockVersion.read(byteBuf),
+                byteBuf.readBytes(32),
+                byteBuf.readBytes(32),
+                Timestamp4.read(byteBuf),
+                Difficulty.read(byteBuf),
+                byteBuf.readIntLE(),
+                true
+        );
+    }
     private static Bytes ZERO_BYTE = new Bytes("00");
+
+
     private BlockVersion blockVersion;
-    private Bytes previousBlockHash;
-    private Bytes mercleRoot;
-    private Timestamp4 date;
+    private ByteBuf previousBlockHash;
+    // reversed
+    private ByteBuf mercleRoot;
+    private OffsetDateTime date;
     private Difficulty difficulty;
     private int uNonce;
     private boolean withZeroByte;
 
-    public BlockHeader(BlockVersion blockVersion, Bytes previousBlockHash, Bytes mercleRoot, Timestamp4 date, Difficulty difficulty, int uNonce, boolean withZeroByte) {
+    public BlockHeader(BlockVersion blockVersion, ByteBuf previousBlockHash, ByteBuf mercleRoot, OffsetDateTime date, Difficulty difficulty, int uNonce, boolean withZeroByte) {
         this(blockVersion, previousBlockHash, mercleRoot, date, difficulty, uNonce);
         this.withZeroByte = withZeroByte;
     }
 
-    public BlockHeader(BlockVersion blockVersion, Bytes previousBlockHash, Bytes mercleRoot, Timestamp4 date, Difficulty difficulty, int uNonce) {
+    public BlockHeader(BlockVersion blockVersion, ByteBuf previousBlockHash, ByteBuf mercleRoot, OffsetDateTime date, Difficulty difficulty, int uNonce) {
         this.blockVersion = blockVersion;
         this.previousBlockHash = previousBlockHash;
         this.mercleRoot = mercleRoot;
@@ -34,15 +52,15 @@ public class BlockHeader implements BinaryEncoded {
         return blockVersion;
     }
 
-    public Bytes getPreviousBlockHash() {
+    public ByteBuf getPreviousBlockHash() {
         return previousBlockHash;
     }
 
-    public Bytes getMercleRoot() {
+    public ByteBuf getMercleRoot() {
         return mercleRoot;
     }
 
-    public Timestamp4 getDate() {
+    public OffsetDateTime getDate() {
         return date;
     }
 
@@ -54,40 +72,26 @@ public class BlockHeader implements BinaryEncoded {
         return uNonce;
     }
 
-    public Bytes hash() {
-        return encode().doubleSha256();
+    public ByteBuf hash() {
+        ByteBuf buffer = Unpooled.buffer();
+        write(buffer);
+        return buffer.doubleSha256();
     }
 
     @Override
-    public Bytes encode() {
-        CompoundBinary compoundBinary = new CompoundBinary();
-        compoundBinary
-                .add(blockVersion)
-                .add(previousBlockHash)
-                .add(mercleRoot.flip())
-                .add(date)
-                .add(difficulty)
-                .add(Bytes.fromIntLE(uNonce));
+    public void write(ByteBuf byteBuf) {
+        blockVersion.write(byteBuf);
+        byteBuf.writeBytes(previousBlockHash);
+        byteBuf.writeBytes(mercleRoot);
+        new Timestamp4(date).write(byteBuf);
+        difficulty.write(byteBuf);
+        byteBuf.writeIntLE(uNonce);
         if (withZeroByte) {
-            compoundBinary.add(ZERO_BYTE);
+            byteBuf.writeBytes(ZERO_BYTE);
         }
-        return compoundBinary.encode();
     }
 
     private Timestamp4 currentDate() {
         return new Timestamp4();
-    }
-
-    @Override
-    public String toString() {
-        return "BlockHeader{" +
-                "blockVersion=" + blockVersion +
-                ", previousBlockHash=" + previousBlockHash.flip().getHexString().toLowerCase() +
-                ", mercleRoot=" + mercleRoot +
-                ", date=" + date +
-                ", difficulty=" + difficulty +
-                ", uNonce=" + uNonce +
-                ", withZeroByte=" + withZeroByte +
-                '}';
     }
 }

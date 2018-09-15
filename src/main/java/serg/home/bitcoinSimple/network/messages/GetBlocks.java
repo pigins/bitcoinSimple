@@ -1,14 +1,31 @@
 package serg.home.bitcoinSimple.network.messages;
 
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.ProtocolVersion;
+import serg.home.bitcoinSimple.network.model.VarInt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetBlocks extends GetId {
+    public static GetBlocks read(ByteBuf byteBuf) {
+        ProtocolVersion protocolVersion = ProtocolVersion.read(byteBuf);
+        int hashCount = (int) VarInt.read(byteBuf);
+        List<ByteBuf> hashes = new ArrayList<>(hashCount);
+        for (int i = 0; i < hashCount; i++) {
+            hashes.add(byteBuf.readBytes(32));
+        }
+        boolean getAsManyAsPossible = false;
+        if (byteBuf.isReadable() && byteBuf.readBytes(32).equals(GetId.STOP_HASH)) {
+            getAsManyAsPossible = true;
+        }
+        return new GetBlocks(protocolVersion, hashes, getAsManyAsPossible);
+    }
+
     public static final String NAME = "getblocks";
 
-    public GetBlocks(ProtocolVersion protocolVersion, List<Bytes> hashes, boolean getAsManyBlocksAsPossible) {
+    public GetBlocks(ProtocolVersion protocolVersion, List<ByteBuf> hashes, boolean getAsManyBlocksAsPossible) {
         super(protocolVersion, hashes, getAsManyBlocksAsPossible);
     }
 

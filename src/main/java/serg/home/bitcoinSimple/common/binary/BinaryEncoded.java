@@ -1,7 +1,7 @@
 package serg.home.bitcoinSimple.common.binary;
 
-import serg.home.bitcoinSimple.common.Bytes;
+import io.netty.buffer.ByteBuf;
 
 public interface BinaryEncoded {
-    Bytes encode();
+    void write(ByteBuf byteBuf);
 }

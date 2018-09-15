@@ -1,15 +1,22 @@
 package serg.home.bitcoinSimple.network.messages;
 
-import serg.home.bitcoinSimple.common.Bytes;
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.network.model.InvVector;
 import serg.home.bitcoinSimple.network.model.VarInt;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Inv implements Payload {
     public static final String NAME = "inv";
-
+    public static Inv read(ByteBuf byteBuf) {
+        int count = (int)VarInt.read(byteBuf);
+        List<InvVector> invVectors = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            invVectors.add(InvVector.read(byteBuf));
+        }
+        return new Inv(invVectors);
+    }
     private List<InvVector> invVectors;
 
     public Inv(List<InvVector> invVectors) {
@@ -26,11 +33,9 @@ public class Inv implements Payload {
     }
 
     @Override
-    public Bytes encode() {
-        CompoundBinary compoundBinary = new CompoundBinary();
-        compoundBinary.add(new VarInt(invVectors.size()));
-        invVectors.forEach(compoundBinary::add);
-        return compoundBinary.encode();
+    public void write(ByteBuf byteBuf) {
+        new VarInt(invVectors.size()).write(byteBuf);
+        invVectors.forEach(invVector -> invVector.write(byteBuf));
     }
 
     @Override

@@ -12,7 +12,7 @@ class GetHeadersTest {
 
     @Test
     void decode() {
-        GetHeaders getHeaders = new BtcMessage(new Bytes(FIRST_GET_HEADERS)).nextGetHeaders();
+        GetHeaders getHeaders = new BtcMessage(new Bytes(FIRST_GET_HEADERS)).getHeaders();
         assertEquals(new ProtocolVersion(70015), getHeaders.protocolVersion());
         assertEquals(1, getHeaders.hashes().size());
         assertEquals(

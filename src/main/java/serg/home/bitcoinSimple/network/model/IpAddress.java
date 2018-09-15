@@ -1,11 +1,18 @@
 package serg.home.bitcoinSimple.network.model;
 
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
 
+import java.math.BigInteger;
 import java.util.BitSet;
 
 public class IpAddress implements BinaryEncoded {
+    public static IpAddress read(ByteBuf byteBuf) {
+        byteBuf.readerIndex(byteBuf.readerIndex() + 12);
+        return new IpAddress(byteBuf.readInt());
+    }
+
     static int toInt(String dottedDecimal) {
         int byte1 = 0;
         int value = 0;
@@ -34,10 +41,11 @@ public class IpAddress implements BinaryEncoded {
     }
 
     @Override
-    public Bytes encode() {
+    public void write(ByteBuf byteBuf) {
         BitSet bits = new BitSet(80 + 16);
         bits.flip(80, 96);
-        return Bytes.concat(new Bytes(bits.toByteArray()), Bytes.fromInt(value));
+        byteBuf.writeBytes(bits.toByteArray());
+        byteBuf.writeInt(value);
     }
 
     public String getIpString() {

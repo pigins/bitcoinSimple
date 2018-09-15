@@ -1,14 +1,19 @@
 package serg.home.bitcoinSimple.network.model;
 
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 public class InvVector implements BinaryEncoded {
-    private InvType type;
-    private Bytes hash;
+    public static InvVector read(ByteBuf byteBuf) {
+        return new InvVector(InvType.fromInt(byteBuf.readIntLE()), byteBuf.readBytes(32));
+    }
 
-    public InvVector(InvType type, Bytes hash) {
+    private InvType type;
+    private ByteBuf hash;
+
+    public InvVector(InvType type, ByteBuf hash) {
         this.type = type;
         this.hash = hash;
     }
@@ -17,16 +22,14 @@ public class InvVector implements BinaryEncoded {
         return type;
     }
 
-    public Bytes hash() {
+    public ByteBuf hash() {
         return hash;
     }
 
     @Override
-    public Bytes encode() {
-        return new CompoundBinary()
-                .add(Bytes.fromIntLE(type.typeValue()))
-                .add(hash)
-                .encode();
+    public void write(ByteBuf byteBuf) {
+        byteBuf.writeIntLE(type.typeValue());
+        byteBuf.writeBytes(hash);
     }
 
     @Override

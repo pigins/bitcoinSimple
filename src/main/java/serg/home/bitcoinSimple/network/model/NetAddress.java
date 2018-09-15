@@ -1,5 +1,6 @@
 package serg.home.bitcoinSimple.network.model;
 
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
@@ -10,6 +11,10 @@ import java.net.InetSocketAddress;
  * https://en.bitcoin.it/wiki/Protocol_documentation#Network_address
  */
 public class NetAddress implements BinaryEncoded {
+    public static NetAddress read(ByteBuf byteBuf) {
+        return new NetAddress(Services.read(byteBuf), IpAddress.read(byteBuf), Short.toUnsignedInt(byteBuf.readShort()));
+    }
+
     private Services services;
     private IpAddress ipAddress;
     private int port;
@@ -43,19 +48,17 @@ public class NetAddress implements BinaryEncoded {
     }
 
     @Override
-    public Bytes encode() {
-        CompoundBinary compoundBinary = new CompoundBinary();
-        compoundBinary.add(services);
+    public void write(ByteBuf byteBuf) {
+        services.write(byteBuf);
         if (ipAddress.isSiteLocalAddress()) {
             // Newer protocol includes the checksum now, this is from a mainline (satoshi) client during an outgoing
             // connection to another local client, notice that it does not fill out the address information at all when
             // the source or destination is "unroutable".
-            compoundBinary.add(new Bytes(new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}));
+            byteBuf.writeBytes(new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
         } else {
-            compoundBinary.add(ipAddress);
-            compoundBinary.add(Bytes.fromShort((short) port));
+            ipAddress.write(byteBuf);
+            byteBuf.writeShort((short) port);
         }
-        return compoundBinary.encode();
     }
 
     @Override

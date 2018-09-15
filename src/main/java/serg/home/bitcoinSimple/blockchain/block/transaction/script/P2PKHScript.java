@@ -2,6 +2,7 @@ package serg.home.bitcoinSimple.blockchain.block.transaction.script;
 
 import serg.home.bitcoinSimple.common.Bytes;
 
+// TODO remove inheritance
 public class P2PKHScript extends Script {
 
     public P2PKHScript(Bytes publicKeyHash) {

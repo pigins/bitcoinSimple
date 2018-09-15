@@ -1,9 +1,11 @@
 package serg.home.bitcoinSimple.common.binary;
 
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.Bytes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CompoundBinary implements BinaryEncoded {
     private List<BinaryEncoded> bytesList = new ArrayList<>();
@@ -14,8 +16,7 @@ public class CompoundBinary implements BinaryEncoded {
     }
 
     @Override
-    public Bytes encode() {
-        Bytes[] arrays = bytesList.stream().map(BinaryEncoded::encode).toArray(Bytes[]::new);
-        return Bytes.concat(arrays);
+    public void write(ByteBuf byteBuf) {
+        bytesList.forEach(binaryEncoded -> binaryEncoded.write(byteBuf));
     }
 }

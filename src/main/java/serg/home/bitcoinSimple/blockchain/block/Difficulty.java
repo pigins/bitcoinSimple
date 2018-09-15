@@ -1,5 +1,8 @@
 package serg.home.bitcoinSimple.blockchain.block;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import org.bouncycastle.util.Arrays;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
 
@@ -11,17 +14,21 @@ public class Difficulty implements BinaryEncoded {
     private static BigInteger DIFFICULTY_1_TARGET_B = new BigInteger("00000000FFFF0000000000000000000000000000000000000000000000000000", 16);
     private static BigInteger DIFFICULTY_1_TARGET_P = new BigInteger("00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16);
 
-    private Bytes bits;
+    public static Difficulty read(ByteBuf byteBuf) {
+        return new Difficulty(byteBuf.readBytes(4));
+    }
 
-    public Difficulty(Bytes bits) {
-        if (bits.length() != 4) {
+    private ByteBuf bits;
+
+    public Difficulty(ByteBuf bits) {
+        if (bits.array().length != 4) {
             throw new IllegalArgumentException();
         }
         this.bits = bits;
     }
 
     public BigInteger target() {
-        byte[] bitsArr = bits.byteArray();
+        byte[] bitsArr = Arrays.reverse(bits.array());
         int exponent = bitsArr[0];
         BigInteger coefficient = new BigInteger(new byte[]{bitsArr[1], bitsArr[2], bitsArr[3]});
         BigInteger result = BigInteger.valueOf(2);
@@ -42,8 +49,8 @@ public class Difficulty implements BinaryEncoded {
     }
 
     @Override
-    public Bytes encode() {
-        return bits.flip();
+    public void write(ByteBuf byteBuf) {
+        byteBuf.writeBytes(bits);
     }
 
     @Override

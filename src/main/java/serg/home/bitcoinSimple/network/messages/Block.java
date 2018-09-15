@@ -11,10 +11,10 @@ public class Block implements Payload {
         return NAME;
     }
 
-    @Override
-    public void decode(ByteReader byteReader) {
-
-    }
+//    @Override
+//    public void decode(ByteReader byteReader) {
+//
+//    }
 
     @Override
     public Bytes encode() {

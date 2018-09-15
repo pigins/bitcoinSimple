@@ -79,7 +79,7 @@ public class HandshakeHandler extends SimpleChannelInboundHandler<BtcMessage> {
             ctx.fireChannelRead(msg);
         } else if (!handshake.success() && isHandshakeCommand(msg.getCommand())) {
             if (msg.getCommand().equals(Version.NAME)) {
-                Version versionPayload = msg.nextVersion();
+                Version versionPayload = msg.version();
                 versionPayload.protocolVersion();
                 remotePeer = versionPayload.peer();
                 handshake.remoteVersionReceived(versionPayload.protocolVersion());

@@ -1,9 +1,16 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.input;
 
+import io.netty.buffer.ByteBuf;
+import serg.home.bitcoinSimple.blockchain.block.transaction.TxVersion;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 public class CoinbaseInput extends Input {
+    public static CoinbaseInput read(ByteBuf byteBuf) {
+        return new CoinbaseInput(
+                OutputLink.read(byteBuf), CoinbaseData.read(byteBuf), byteBuf.readInt()
+        );
+    }
     private static final OutputLink OUTPUT_LINK = new OutputLink(
             new Bytes("0000000000000000000000000000000000000000000000000000000000000000"),
             -1
@@ -24,8 +31,10 @@ public class CoinbaseInput extends Input {
     }
 
     @Override
-    public Bytes encode() {
-        return new CompoundBinary().add(outputLink).add(coinbaseData).add(Bytes.fromInt(uSequence)).encode();
+    public void write(ByteBuf byteBuf) {
+        outputLink.write(byteBuf);
+        coinbaseData.write(byteBuf);
+        byteBuf.writeInt(uSequence);
     }
 
     @Override
@@ -36,4 +45,6 @@ public class CoinbaseInput extends Input {
                 ", uSequence=" + uSequence +
                 '}';
     }
+
+
 }

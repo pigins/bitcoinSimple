@@ -18,7 +18,7 @@ class RejectTest {
 
     @Test
     void decode() {
-        Reject reject = new BtcMessage(new Bytes(rejectPayload)).nextReject();
+        Reject reject = new BtcMessage(new Bytes(rejectPayload)).reject();
         assertEquals("tx", reject.getMessage());
         assertEquals(Reject.CCODES.REJECT_DUPLICATE, reject.getCcode());
         assertEquals("bad-txns-inputs-spent", reject.getReason());

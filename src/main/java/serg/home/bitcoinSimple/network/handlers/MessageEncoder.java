@@ -22,7 +22,9 @@ public class MessageEncoder extends MessageToByteEncoder<Payload> {
     @Override
     protected void encode(ChannelHandlerContext ctx, Payload msg, ByteBuf out) throws Exception {
         Bytes encodedMessage = msg.encode();
-        MessageHeader messageHeader = new MessageHeader(network, msg.name(), encodedMessage);
+        encodedMessage.length();
+        Bytes checkum = encodedMessage.doubleSha256().subArray(0, 4);
+        MessageHeader messageHeader = new MessageHeader(network, msg.name(), encodedMessage.length(), checkum);
         log.trace(msg);
         log.trace(encodedMessage);
         out.writeBytes(messageHeader.encode().byteArray());

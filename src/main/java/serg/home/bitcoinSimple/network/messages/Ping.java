@@ -1,5 +1,6 @@
 package serg.home.bitcoinSimple.network.messages;
 
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.Bytes;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,6 +10,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Ping implements Payload {
     public static final String NAME = "ping";
+    public static Ping read(ByteBuf byteBuf) {
+        return new Ping(byteBuf.readLong());
+    }
+
     private long uNonce;
 
     public Ping(long uNonce) {
@@ -29,8 +34,8 @@ public class Ping implements Payload {
     }
 
     @Override
-    public Bytes encode() {
-        return Bytes.fromLong(uNonce);
+    public void write(ByteBuf byteBuf) {
+        byteBuf.writeLong(uNonce);
     }
 
     @Override

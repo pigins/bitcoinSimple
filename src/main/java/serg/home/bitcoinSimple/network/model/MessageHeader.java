@@ -1,5 +1,6 @@
 package serg.home.bitcoinSimple.network.model;
 
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
 import serg.home.bitcoinSimple.common.binary.CompoundBinary;
@@ -7,7 +8,13 @@ import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 import java.nio.charset.StandardCharsets;
 
 public class MessageHeader implements BinaryEncoded {
-
+    public static MessageHeader read(ByteBuf byteBuf) {
+        Network network = Network.read(byteBuf);
+        String command = new String(byteBuf.readBytes(12).array(), StandardCharsets.US_ASCII).trim();
+        int payloadSize = byteBuf.readIntLE();
+        ByteBuf checksum = byteBuf.readBytes(4);
+        return new MessageHeader(network, command, payloadSize, checksum);
+    }
     /**
      * Magic value indicating message origin network, and used to seek to next message when stream state is unknown
      */
@@ -17,20 +24,13 @@ public class MessageHeader implements BinaryEncoded {
      */
     private String command;
     private int payloadSize;
-    private Bytes checksum;
+    private ByteBuf checksum;
 
-    public MessageHeader(Network network, String command, int payloadSize, Bytes checksum) {
+    public MessageHeader(Network network, String command, int payloadSize, ByteBuf checksum) {
         this.network = network;
         this.command = command;
         this.payloadSize = payloadSize;
         this.checksum = checksum;
-    }
-
-    public MessageHeader(Network network, String command, Bytes payload) {
-        this.network = network;
-        this.command = command;
-        this.payloadSize = payload.length();
-        this.checksum = payload.doubleSha256().subArray(0, 4);
     }
 
     public boolean sameNetwork(Network network) {
@@ -49,18 +49,22 @@ public class MessageHeader implements BinaryEncoded {
         return payloadSize;
     }
 
-    public Bytes getChecksum() {
+    public ByteBuf getChecksum() {
         return checksum;
     }
 
     @Override
-    public Bytes encode() {
-        return new CompoundBinary()
-                .add(network)
-                .add(new Bytes(command.getBytes(StandardCharsets.US_ASCII)).nullPadded(12))
-                .add(Bytes.fromIntLE(payloadSize))
-                .add(checksum)
-                .encode();
+    public void write(ByteBuf byteBuf) {
+        network.write(byteBuf);
+        byteBuf.writeBytes(nullPadded(command.getBytes(StandardCharsets.US_ASCII)));
+        byteBuf.writeIntLE(payloadSize);
+        byteBuf.writeBytes(checksum);
+    }
+
+    private byte[] nullPadded(byte[] in) {
+        byte[] res = new byte[12];
+        System.arraycopy(in, 0, res, 0, in.length);
+        return res;
     }
 
     @Override

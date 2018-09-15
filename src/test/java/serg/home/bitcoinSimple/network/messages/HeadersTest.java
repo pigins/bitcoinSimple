@@ -13,7 +13,7 @@ class HeadersTest {
 
     @Test
     void decode() throws IOException {
-        Headers headers = new BtcMessage(new Bytes(HEADERS)).nextHeaders();
+        Headers headers = new BtcMessage(new Bytes(HEADERS)).headers();
         assertEquals(8, headers.blockHeaders().size());
     }
 }

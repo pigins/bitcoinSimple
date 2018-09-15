@@ -1,8 +1,7 @@
 package serg.home.bitcoinSimple.network.messages;
 
-import serg.home.bitcoinSimple.common.Bytes;
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.network.model.VarString;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -13,6 +12,15 @@ import java.util.Objects;
  */
 public class Reject implements Payload {
     public static final String NAME = "reject";
+    public static Reject read(ByteBuf byteBuf) {
+        return new Reject(
+                VarString.read(byteBuf),
+                Reject.CCODES.from(byteBuf.readByte()),
+                VarString.read(byteBuf),
+                byteBuf.readBytes(32)
+        );
+    }
+
 
     public enum CCODES {
         REJECT_MALFORMED((byte) 0x01),
@@ -55,13 +63,13 @@ public class Reject implements Payload {
      * Optional extra data provided by some errors. Currently, all errors which provide this field fill it with the
      * TXID or block header hash of the object being rejected, so the field is 32 bytes.
      */
-    private Bytes data;
+    private ByteBuf data;
 
-    public Reject(String message, CCODES ccode, String reason, @Nullable Bytes data) {
+    public Reject(String message, CCODES ccode, String reason, @Nullable ByteBuf data) {
         this.message = message;
         this.ccode = ccode;
         this.reason = reason;
-        this.data = Objects.requireNonNullElseGet(data, Bytes::new);
+        this.data = Objects.requireNonNullElseGet(data, ByteBuf::new);
     }
 
     public String getMessage() {
@@ -76,7 +84,7 @@ public class Reject implements Payload {
         return reason;
     }
 
-    public Bytes getData() {
+    public ByteBuf getData() {
         return data;
     }
 
@@ -86,13 +94,11 @@ public class Reject implements Payload {
     }
 
     @Override
-    public Bytes encode() {
-        return new CompoundBinary()
-                .add(new VarString(message))
-                .add(new Bytes(ccode.getValue()))
-                .add(new VarString(reason))
-                .add(data)
-                .encode();
+    public void write(ByteBuf byteBuf) {
+        new VarString(message).write(byteBuf);
+        byteBuf.writeByte(ccode.getValue());
+        new VarString(reason).write(byteBuf);
+        byteBuf.writeBytes(data);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package serg.home.bitcoinSimple.network.messages;
 
-import serg.home.bitcoinSimple.common.Bytes;
+import io.netty.buffer.ByteBuf;
 
 /**
  * https://en.bitcoin.it/wiki/Satoshi_Client_Node_Discovery
@@ -14,7 +14,7 @@ public class GetAddr implements Payload {
     }
 
     @Override
-    public Bytes encode() {
-        return new Bytes();
+    public void write(ByteBuf byteBuf) {
+        /*NOPE*/
     }
 }

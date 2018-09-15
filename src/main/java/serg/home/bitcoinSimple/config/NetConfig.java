@@ -10,7 +10,6 @@ import serg.home.bitcoinSimple.blockchain.block.transaction.input.CoinbaseData;
 import serg.home.bitcoinSimple.blockchain.block.transaction.input.CoinbaseInput;
 import serg.home.bitcoinSimple.blockchain.block.transaction.input.Input;
 import serg.home.bitcoinSimple.blockchain.block.transaction.output.Output;
-import serg.home.bitcoinSimple.blockchain.block.transaction.output.Value;
 import serg.home.bitcoinSimple.blockchain.block.transaction.script.OP;
 import serg.home.bitcoinSimple.blockchain.block.transaction.script.Script;
 import serg.home.bitcoinSimple.common.Bytes;

@@ -1,12 +1,12 @@
 package serg.home.bitcoinSimple.network.messages;
 
-import serg.home.bitcoinSimple.common.Bytes;
+import io.netty.buffer.ByteBuf;
 
 public class CheckedMessage {
     private String command;
-    private Bytes payload;
+    private ByteBuf payload;
 
-    public CheckedMessage(String command, Bytes payload) {
+    public CheckedMessage(String command, ByteBuf payload) {
         this.command = command;
         this.payload = payload;
     }
@@ -15,7 +15,7 @@ public class CheckedMessage {
         return command;
     }
 
-    public Bytes payload() {
+    public ByteBuf payload() {
         return payload;
     }
 

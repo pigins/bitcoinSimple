@@ -1,5 +1,6 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.script;
 
+import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.VarInt;
 import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
@@ -7,8 +8,23 @@ import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Script implements BinaryEncoded {
-    public static Script p2pkh(Bytes publicKeyHash) {
+public class  Script implements BinaryEncoded {
+    public static Script read(ByteBuf byteBuf) {
+        List<Object> items = new ArrayList<>();
+        int scriptLength = (int) VarInt.read(byteBuf);
+        for (int i = 0; i < scriptLength; i++) {
+            byte b = byteBuf.readByte();
+            if (b >= 1 && b <= 75) {
+                items.add(byteBuf.readBytes(b));
+                i += b;
+            } else {
+                items.add(OP.from(b));
+            }
+        }
+        return new Script(items);
+    }
+
+    public static Script p2pkh(ByteBuf publicKeyHash) {
         return new Script().__(OP.DUP).__(OP.HASH160).__(publicKeyHash).__(OP.EQUALVERIFY).__(OP.CHECKSIG);
     }
 
@@ -26,7 +42,8 @@ public class Script implements BinaryEncoded {
         return this;
     }
 
-    public Script __(Bytes data) {
+    public Script __(ByteBuf data) {
+        // TODO
         if (data.length() <= 75) {
             items.add((byte)data.length());
             items.add(data);
@@ -37,13 +54,13 @@ public class Script implements BinaryEncoded {
     }
 
     @Override
-    public Bytes encode() {
+    public void write(ByteBuf byteBuf) {
         List<Byte> result = new ArrayList<>();
         items.forEach((item) -> {
             if (item instanceof OP) {
                 result.add(((OP)item).getCode());
-            } else if (item instanceof Bytes){
-                for (byte aByte : ((Bytes) item).byteArray()) {
+            } else if (item instanceof ByteBuf){
+                for (byte aByte : ((ByteBuf) item).array()) {
                     result.add(aByte);
                 }
             } else if (item instanceof Byte) {
@@ -55,7 +72,8 @@ public class Script implements BinaryEncoded {
             res[i] = result.get(i);
         }
         VarInt varInt = new VarInt(res.length);
-        return varInt.encode().concat(new Bytes(res));
+        varInt.write(byteBuf);
+        byteBuf.writeBytes(res);
     }
 
     @Override

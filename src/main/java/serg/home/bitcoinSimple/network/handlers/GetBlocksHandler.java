@@ -61,7 +61,7 @@ public class GetBlocksHandler extends SimpleChannelInboundHandler<BtcMessage> {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, final BtcMessage msg) {
         if (msg.getCommand().equals(Inv.NAME)) {
-            Inv inv = msg.nextInv();
+            Inv inv = msg.inv();
             List<Bytes> hashes = inv.invVectors().stream()
                     .filter(invVector -> invVector.type().equals(InvType.MSG_BLOCK))
                     .map(InvVector::hash)

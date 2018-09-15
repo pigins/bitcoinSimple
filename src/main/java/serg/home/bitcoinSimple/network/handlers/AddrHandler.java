@@ -21,7 +21,7 @@ public class AddrHandler extends SimpleChannelInboundHandler<BtcMessage> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
         if (msg.getCommand().equals(Addr.NAME)) {
-            Addr addr = msg.nextAddr();
+            Addr addr = msg.addr();
             knownAddresses.put(addr.getAddrList());
             logger.trace(addr);
         } else if (msg.getCommand().equals(GetAddr.NAME)) {
