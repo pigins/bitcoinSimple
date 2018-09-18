@@ -6,11 +6,14 @@ public class TimestampWithAddress {
     private OffsetDateTime timestamp;
     private NetAddress address;
 
+    public TimestampWithAddress(Timestamp timestamp, NetAddress address) {
+        this.timestamp = timestamp.getValue();
+        this.address = address;
+    }
     public TimestampWithAddress(OffsetDateTime timestamp, NetAddress address) {
         this.timestamp = timestamp;
         this.address = address;
     }
-
     public OffsetDateTime getTimestamp() {
         return timestamp;
     }

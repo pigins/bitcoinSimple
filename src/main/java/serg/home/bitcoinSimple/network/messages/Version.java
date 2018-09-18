@@ -1,8 +1,6 @@
 package serg.home.bitcoinSimple.network.messages;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.*;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 import serg.home.bitcoinSimple.network.model.*;
 import serg.home.bitcoinSimple.network.peer.connection.Peer;
 
@@ -27,7 +25,7 @@ public class Version implements Payload {
 
     private ProtocolVersion protocolVersion;
     private Services services;
-    private OffsetDateTime timestamp;
+    private Timestamp8 timestamp;
     private NetAddress toNetAddress;
     private NetAddress fromNetAddress;
     private long uNonce;
@@ -35,7 +33,7 @@ public class Version implements Payload {
     private int uStartHeight;
     private boolean relay;
 
-    public Version(ProtocolVersion protocolVersion, Services services, OffsetDateTime timestamp,
+    public Version(ProtocolVersion protocolVersion, Services services, Timestamp8 timestamp,
                    NetAddress toNetAddress, NetAddress fromNetAddress, long uNonce, String userAgent,
                    int uStartHeight, boolean relay) {
         this.protocolVersion = protocolVersion;
@@ -70,7 +68,7 @@ public class Version implements Payload {
     public void write(ByteBuf byteBuf) {
         protocolVersion.write(byteBuf);
         services.write(byteBuf);
-        new Timestamp8(timestamp).write(byteBuf);
+        timestamp.write(byteBuf);
         toNetAddress.write(byteBuf);
         fromNetAddress.write(byteBuf);
         byteBuf.writeLong(uNonce);

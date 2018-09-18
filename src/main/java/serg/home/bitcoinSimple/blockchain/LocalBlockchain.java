@@ -1,8 +1,8 @@
 package serg.home.bitcoinSimple.blockchain;
 
-import serg.home.bitcoinSimple.blockchain.block.Block;
+import io.netty.buffer.ByteBuf;
+import serg.home.bitcoinSimple.network.messages.Block;
 import serg.home.bitcoinSimple.blockchain.block.BlockHeader;
-import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.database.Database;
 
 import java.util.ArrayList;
@@ -46,10 +46,10 @@ public class LocalBlockchain {
         return indexes;
     }
 
-    public List<Bytes> locator() {
+    public List<ByteBuf> locator() {
         List<Integer> indexes = locatorIndexes(headersChain.size() - 1);
         System.out.println(headersChain.size());
-        List<Bytes> result = new ArrayList<>();
+        List<ByteBuf> result = new ArrayList<>();
         for (Integer index : indexes) {
             result.add(headersChain.get(index).hash());
         }

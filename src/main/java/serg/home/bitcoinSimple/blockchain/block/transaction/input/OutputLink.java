@@ -1,10 +1,9 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.input;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
-public class OutputLink implements BinaryEncoded {
+public class OutputLink implements ByteBufWritable {
     public static OutputLink read(ByteBuf byteBuf) {
         return new OutputLink(byteBuf.readBytes(32), byteBuf.readInt());
     }

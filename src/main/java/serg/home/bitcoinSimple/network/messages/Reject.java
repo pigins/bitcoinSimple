@@ -1,6 +1,8 @@
 package serg.home.bitcoinSimple.network.messages;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.EmptyByteBuf;
+import io.netty.buffer.Unpooled;
 import serg.home.bitcoinSimple.network.model.VarString;
 
 import javax.annotation.Nullable;
@@ -20,7 +22,6 @@ public class Reject implements Payload {
                 byteBuf.readBytes(32)
         );
     }
-
 
     public enum CCODES {
         REJECT_MALFORMED((byte) 0x01),
@@ -69,7 +70,7 @@ public class Reject implements Payload {
         this.message = message;
         this.ccode = ccode;
         this.reason = reason;
-        this.data = Objects.requireNonNullElseGet(data, ByteBuf::new);
+        this.data = Objects.requireNonNullElse(data, Unpooled.EMPTY_BUFFER);
     }
 
     public String getMessage() {

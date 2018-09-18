@@ -1,7 +1,6 @@
 package serg.home.bitcoinSimple.wallet;
 
 import org.bitcoinj.core.Base58;
-import serg.home.bitcoinSimple.common.Bytes;
 
 import java.io.Serializable;
 import java.util.Objects;

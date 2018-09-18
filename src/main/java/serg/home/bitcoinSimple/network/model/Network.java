@@ -1,12 +1,11 @@
 package serg.home.bitcoinSimple.network.model;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.util.Arrays;
 
-public enum Network implements BinaryEncoded {
+public enum Network implements ByteBufWritable {
     MAIN(0xD9B4BEF9),
     TESTNET(0xDAB5BFFA),
     TESTNET3(0x0709110B),

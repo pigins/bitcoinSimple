@@ -1,16 +1,14 @@
 package serg.home.bitcoinSimple.blockchain.block;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import org.bouncycastle.util.Arrays;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-public class Difficulty implements BinaryEncoded {
+public class Difficulty implements ByteBufWritable {
     private static BigInteger DIFFICULTY_1_TARGET_B = new BigInteger("00000000FFFF0000000000000000000000000000000000000000000000000000", 16);
     private static BigInteger DIFFICULTY_1_TARGET_P = new BigInteger("00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16);
 

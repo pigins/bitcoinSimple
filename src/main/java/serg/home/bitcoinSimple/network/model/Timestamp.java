@@ -1,13 +1,13 @@
 package serg.home.bitcoinSimple.network.model;
 
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 
-public abstract class Timestamp implements BinaryEncoded {
+public abstract class Timestamp implements ByteBufWritable {
     protected OffsetDateTime value;
 
     public OffsetDateTime getValue() {

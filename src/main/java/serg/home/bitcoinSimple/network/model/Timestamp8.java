@@ -8,8 +8,8 @@ import java.time.ZoneOffset;
 
 public class Timestamp8 extends Timestamp {
 
-    public static OffsetDateTime read(ByteBuf byteBuf) {
-        return Instant.ofEpochSecond(byteBuf.readLongLE()).atOffset(ZoneOffset.UTC);
+    public static Timestamp8 read(ByteBuf byteBuf) {
+        return new Timestamp8(Instant.ofEpochSecond(byteBuf.readLongLE()).atOffset(ZoneOffset.UTC));
     }
 
     public Timestamp8(long v) {

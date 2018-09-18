@@ -1,14 +1,13 @@
 package serg.home.bitcoinSimple.network.model;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class VarInt implements BinaryEncoded {
+public class VarInt implements ByteBufWritable {
     public static long read(ByteBuf byteBuf) {
         long value;
         byte b = byteBuf.readByte();

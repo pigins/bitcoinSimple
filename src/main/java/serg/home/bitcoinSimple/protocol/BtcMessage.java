@@ -1,16 +1,43 @@
 package serg.home.bitcoinSimple.protocol;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.blockchain.block.Block;
+import serg.home.bitcoinSimple.common.DigestByteBuf;
+import serg.home.bitcoinSimple.network.exceptions.DifferentNetworks;
+import serg.home.bitcoinSimple.network.exceptions.InvalidMessageChecksum;
+import serg.home.bitcoinSimple.network.messages.Block;
 import serg.home.bitcoinSimple.network.messages.*;
+import serg.home.bitcoinSimple.network.model.MessageHeader;
+import serg.home.bitcoinSimple.network.model.Network;
 
 public class BtcMessage {
+    private final MessageHeader header;
     private final ByteBuf payload;
-    private final String command;
 
-    public BtcMessage(String command, ByteBuf payload) {
-        this.command = command;
-        this.payload = payload;
+    public BtcMessage(ByteBuf message) {
+        this.header = MessageHeader.read(message);
+        this.payload = message.slice();
+    }
+
+    public void validateNetwork(Network network) {
+        if (!header.sameNetwork(network)) {
+            throw new DifferentNetworks(header.getCommand());
+        }
+    }
+
+    public void validateChecksum() {
+        DigestByteBuf digestByteBuf = new DigestByteBuf(payload);
+        int calculatedChecksum = digestByteBuf.doubleSha256().readInt();
+        if (calculatedChecksum != header.getChecksum()) {
+            throw new InvalidMessageChecksum(header.getCommand());
+        }
+    }
+
+    public String command() {
+        return header.getCommand();
+    }
+
+    public boolean isHandshakeCommand() {
+        return command().equals(Version.NAME) || command().equals(Verack.NAME);
     }
 
     public Addr addr() {
@@ -18,7 +45,7 @@ public class BtcMessage {
     }
 
     public boolean isAddr() {
-        return command.equals(Addr.NAME);
+        return command().equals(Addr.NAME);
     }
 
     public Block block() {
@@ -26,7 +53,7 @@ public class BtcMessage {
     }
 
     public boolean isBlock() {
-        return command.equals(Block.NAME);
+        return command().equals(Block.NAME);
     }
 
     public GetAddr getAddr() {
@@ -34,7 +61,7 @@ public class BtcMessage {
     }
 
     public boolean isGetAddr() {
-        return command.equals(GetAddr.NAME);
+        return command().equals(GetAddr.NAME);
     }
 
     public GetBlocks getBlocks() {
@@ -42,7 +69,7 @@ public class BtcMessage {
     }
 
     public boolean isGetBlocks() {
-        return command.equals(GetBlocks.NAME);
+        return command().equals(GetBlocks.NAME);
     }
 
     public GetHeaders getHeaders() {
@@ -50,7 +77,7 @@ public class BtcMessage {
     }
 
     public boolean isGetHeaders() {
-        return command.equals(GetHeaders.NAME);
+        return command().equals(GetHeaders.NAME);
     }
 
     public Headers headers() {
@@ -58,7 +85,7 @@ public class BtcMessage {
     }
 
     public boolean isHeaders() {
-        return command.equals(Headers.NAME);
+        return command().equals(Headers.NAME);
     }
 
     public Inv inv() {
@@ -66,7 +93,7 @@ public class BtcMessage {
     }
 
     public boolean isInv() {
-        return command.equals(Inv.NAME);
+        return command().equals(Inv.NAME);
     }
 
     public Ping ping() {
@@ -74,7 +101,7 @@ public class BtcMessage {
     }
 
     public boolean isPing() {
-        return command.equals(Ping.NAME);
+        return command().equals(Ping.NAME);
     }
 
     public Pong pong() {
@@ -82,7 +109,7 @@ public class BtcMessage {
     }
 
     public boolean isPong() {
-        return command.equals(Pong.NAME);
+        return command().equals(Pong.NAME);
     }
 
     public Reject reject() {
@@ -90,7 +117,7 @@ public class BtcMessage {
     }
 
     public boolean isReject() {
-        return command.equals(Reject.NAME);
+        return command().equals(Reject.NAME);
     }
 
     public Verack verack() {
@@ -98,7 +125,7 @@ public class BtcMessage {
     }
 
     public boolean isVerack() {
-        return command.equals(Verack.NAME);
+        return command().equals(Verack.NAME);
     }
 
     public Version version() {
@@ -106,6 +133,6 @@ public class BtcMessage {
     }
 
     public boolean isVersion() {
-        return command.equals(Version.NAME);
+        return command().equals(Version.NAME);
     }
 }

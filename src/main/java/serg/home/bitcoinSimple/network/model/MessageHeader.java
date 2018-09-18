@@ -1,18 +1,16 @@
 package serg.home.bitcoinSimple.network.model;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.nio.charset.StandardCharsets;
 
-public class MessageHeader implements BinaryEncoded {
+public class MessageHeader implements ByteBufWritable {
     public static MessageHeader read(ByteBuf byteBuf) {
         Network network = Network.read(byteBuf);
         String command = new String(byteBuf.readBytes(12).array(), StandardCharsets.US_ASCII).trim();
         int payloadSize = byteBuf.readIntLE();
-        ByteBuf checksum = byteBuf.readBytes(4);
+        int checksum = byteBuf.readInt();
         return new MessageHeader(network, command, payloadSize, checksum);
     }
     /**
@@ -24,9 +22,9 @@ public class MessageHeader implements BinaryEncoded {
      */
     private String command;
     private int payloadSize;
-    private ByteBuf checksum;
+    private int checksum;
 
-    public MessageHeader(Network network, String command, int payloadSize, ByteBuf checksum) {
+    public MessageHeader(Network network, String command, int payloadSize, int checksum) {
         this.network = network;
         this.command = command;
         this.payloadSize = payloadSize;
@@ -49,7 +47,7 @@ public class MessageHeader implements BinaryEncoded {
         return payloadSize;
     }
 
-    public ByteBuf getChecksum() {
+    public int getChecksum() {
         return checksum;
     }
 
@@ -58,7 +56,7 @@ public class MessageHeader implements BinaryEncoded {
         network.write(byteBuf);
         byteBuf.writeBytes(nullPadded(command.getBytes(StandardCharsets.US_ASCII)));
         byteBuf.writeIntLE(payloadSize);
-        byteBuf.writeBytes(checksum);
+        byteBuf.writeInt(checksum);
     }
 
     private byte[] nullPadded(byte[] in) {

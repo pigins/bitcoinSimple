@@ -1,20 +1,19 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.input;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.ByteBuf;
 import serg.home.bitcoinSimple.network.model.VarInt;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class CoinbaseData implements BinaryEncoded {
+public class CoinbaseData implements ByteBufWritable {
     public static CoinbaseData read(ByteBuf byteBuf) {
         int dataSize = (int) VarInt.read(byteBuf);
         ByteBuf data = byteBuf.readBytes(dataSize);
         // TODO add height decoding
-        return new CoinbaseData(null, data);
+        // array!!
+        return new CoinbaseData(null, data.array());
     }
     private static final int MIN_SIZE = 2;
     private static final int MAX_SIZE = 100;
@@ -50,7 +49,7 @@ public class CoinbaseData implements BinaryEncoded {
             new VarInt(bytes.length).write(byteBuf);
             byteBuf.writeBytes(bytes);
         } else {
-            new VarInt(bytes.length + 4).write(byteBuf)
+            new VarInt(bytes.length + 4).write(byteBuf);
             byteBuf.writeInt(blockHeight);
             byteBuf.writeBytes(bytes);
         }

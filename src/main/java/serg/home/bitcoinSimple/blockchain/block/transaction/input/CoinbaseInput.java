@@ -1,9 +1,8 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.input;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.blockchain.block.transaction.TxVersion;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 
 public class CoinbaseInput extends Input {
     public static CoinbaseInput read(ByteBuf byteBuf) {
@@ -12,7 +11,7 @@ public class CoinbaseInput extends Input {
         );
     }
     private static final OutputLink OUTPUT_LINK = new OutputLink(
-            new Bytes("0000000000000000000000000000000000000000000000000000000000000000"),
+            Unpooled.wrappedBuffer(ByteBufUtil.decodeHexDump("0000000000000000000000000000000000000000000000000000000000000000")),
             -1
     );
 

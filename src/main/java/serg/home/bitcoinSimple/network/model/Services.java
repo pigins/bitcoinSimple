@@ -1,14 +1,14 @@
 package serg.home.bitcoinSimple.network.model;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Services implements BinaryEncoded {
+public class Services implements ByteBufWritable {
     public static Services read(ByteBuf byteBuf) {
         long services = byteBuf.readLongLE();
         return new Services(services);

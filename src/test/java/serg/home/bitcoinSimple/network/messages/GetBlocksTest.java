@@ -1,15 +1,14 @@
 package serg.home.bitcoinSimple.network.messages;
 
 import org.junit.jupiter.api.Test;
-import serg.home.bitcoinSimple.common.Bytes;
+import serg.home.bitcoinSimple.BaseTest;
 import serg.home.bitcoinSimple.network.model.ProtocolVersion;
-import serg.home.bitcoinSimple.protocol.BtcMessage;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GetBlocksTest {
+class GetBlocksTest extends BaseTest {
     private static String GETBLOCKS_PAYLOAD =
                       "71110100" // Protocol version: 70001
                     + "02" // Hash count: 2
@@ -22,15 +21,15 @@ class GetBlocksTest {
 
     @Test
     void decode() {
-        GetBlocks getBlocks = new BtcMessage(new Bytes(GETBLOCKS_PAYLOAD)).getBlocks();
+        GetBlocks getBlocks = GetBlocks.read(fromHex(GETBLOCKS_PAYLOAD));
         assertEquals(new ProtocolVersion(70001), getBlocks.protocolVersion());
         assertEquals(2, getBlocks.hashes().size());
         assertEquals(
-                new Bytes("D39F608A7775B537729884D4E6633BB2105E55A16A14D31B0000000000000000"),
+                fromHex("D39F608A7775B537729884D4E6633BB2105E55A16A14D31B0000000000000000"),
                 getBlocks.hashes().get(0)
         );
         assertEquals(
-                new Bytes("5C3E6403D40837110A2E8AFB602B1C01714BDA7CE23BEA0A0000000000000000"),
+                fromHex("5C3E6403D40837110A2E8AFB602B1C01714BDA7CE23BEA0A0000000000000000"),
                 getBlocks.hashes().get(1)
         );
         assertTrue(getBlocks.getAsManyAsPossible());
@@ -40,9 +39,9 @@ class GetBlocksTest {
     void encode() {
         GetBlocks getBlocks = new GetBlocks(
                 new ProtocolVersion(70001),
-                List.of(new Bytes("D39F608A7775B537729884D4E6633BB2105E55A16A14D31B0000000000000000"),
-                        new Bytes("5C3E6403D40837110A2E8AFB602B1C01714BDA7CE23BEA0A0000000000000000")),
+                List.of(fromHex("D39F608A7775B537729884D4E6633BB2105E55A16A14D31B0000000000000000"),
+                        fromHex("5C3E6403D40837110A2E8AFB602B1C01714BDA7CE23BEA0A0000000000000000")),
                 true);
-        assertEquals(GETBLOCKS_PAYLOAD, getBlocks.encode().getHexString());
+        assertEquals(GETBLOCKS_PAYLOAD, writeHex(getBlocks));
     }
 }

@@ -1,11 +1,12 @@
 package serg.home.bitcoinSimple.network.handlers;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import serg.home.bitcoinSimple.common.Bytes;
+import serg.home.bitcoinSimple.common.DigestByteBuf;
 import serg.home.bitcoinSimple.network.model.MessageHeader;
 import serg.home.bitcoinSimple.network.messages.Payload;
 import serg.home.bitcoinSimple.network.model.Network;
@@ -21,13 +22,12 @@ public class MessageEncoder extends MessageToByteEncoder<Payload> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Payload msg, ByteBuf out) throws Exception {
-        Bytes encodedMessage = msg.encode();
-        encodedMessage.length();
-        Bytes checkum = encodedMessage.doubleSha256().subArray(0, 4);
-        MessageHeader messageHeader = new MessageHeader(network, msg.name(), encodedMessage.length(), checkum);
+        ByteBuf payloadBuffer = Unpooled.buffer();
+        msg.write(payloadBuffer);
+        int checksum = new DigestByteBuf(payloadBuffer).doubleSha256().readInt();
+        MessageHeader messageHeader = new MessageHeader(network, msg.name(), payloadBuffer.writerIndex() + 1, checksum);
         log.trace(msg);
-        log.trace(encodedMessage);
-        out.writeBytes(messageHeader.encode().byteArray());
-        out.writeBytes(encodedMessage.byteArray());
+        messageHeader.write(out);
+        out.writeBytes(payloadBuffer);
     }
 }

@@ -1,10 +1,7 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.input;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.blockchain.block.transaction.TxVersion;
 import serg.home.bitcoinSimple.blockchain.block.transaction.script.Script;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 public class RegularInput extends Input {
     public static RegularInput read(ByteBuf byteBuf) {

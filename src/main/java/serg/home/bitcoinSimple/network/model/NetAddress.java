@@ -1,16 +1,14 @@
 package serg.home.bitcoinSimple.network.model;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.net.InetSocketAddress;
 
 /**
  * https://en.bitcoin.it/wiki/Protocol_documentation#Network_address
  */
-public class NetAddress implements BinaryEncoded {
+public class NetAddress implements ByteBufWritable {
     public static NetAddress read(ByteBuf byteBuf) {
         return new NetAddress(Services.read(byteBuf), IpAddress.read(byteBuf), Short.toUnsignedInt(byteBuf.readShort()));
     }

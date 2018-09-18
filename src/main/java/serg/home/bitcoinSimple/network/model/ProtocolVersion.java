@@ -4,12 +4,11 @@ import io.netty.buffer.ByteBuf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.util.Arrays;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.util.Objects;
 
-public class ProtocolVersion implements BinaryEncoded, Comparable<ProtocolVersion> {
+public class ProtocolVersion implements ByteBufWritable, Comparable<ProtocolVersion> {
     public static Logger logger = LogManager.getLogger();
     public static ProtocolVersion min(ProtocolVersion a, ProtocolVersion b) {
         return a.compareTo(b) < 0 ? a : b;

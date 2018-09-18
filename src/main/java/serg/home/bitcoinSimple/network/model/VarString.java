@@ -1,11 +1,11 @@
 package serg.home.bitcoinSimple.network.model;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.nio.charset.StandardCharsets;
 
-public class VarString implements BinaryEncoded {
+public class VarString implements ByteBufWritable {
     public static String read(ByteBuf byteBuf) {
         long stringLength = VarInt.read(byteBuf);
         return (String) byteBuf.readCharSequence((int) stringLength, StandardCharsets.US_ASCII);

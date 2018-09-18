@@ -1,6 +1,10 @@
 package serg.home.bitcoinSimple.blockchain.block;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
+import serg.home.bitcoinSimple.BaseTest;
 import serg.home.bitcoinSimple.blockchain.block.transaction.Transaction;
 import serg.home.bitcoinSimple.blockchain.block.transaction.TxVersion;
 import serg.home.bitcoinSimple.blockchain.block.transaction.input.CoinbaseData;
@@ -9,7 +13,8 @@ import serg.home.bitcoinSimple.blockchain.block.transaction.input.Input;
 import serg.home.bitcoinSimple.blockchain.block.transaction.output.Output;
 import serg.home.bitcoinSimple.blockchain.block.transaction.script.OP;
 import serg.home.bitcoinSimple.blockchain.block.transaction.script.Script;
-import serg.home.bitcoinSimple.common.Bytes;
+import serg.home.bitcoinSimple.common.DigestByteBuf;
+import serg.home.bitcoinSimple.network.messages.Block;
 import serg.home.bitcoinSimple.config.TestnetConfig;
 import serg.home.bitcoinSimple.network.model.Timestamp4;
 
@@ -18,7 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Testnet3GenesisBlockTest {
+class Testnet3GenesisBlockTest extends BaseTest {
     static final String genesisHeaderHash = "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943";
 
 //    {
@@ -76,20 +81,20 @@ class Testnet3GenesisBlockTest {
     void encode() {
         BlockHeader blockHeader = new BlockHeader(
                 BlockVersion.V1,
-                new Bytes("0000000000000000000000000000000000000000000000000000000000000000"),
-                new Bytes("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
+                fromHex("0000000000000000000000000000000000000000000000000000000000000000"),
+                fromHex("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"),
                 new Timestamp4(1296688602L),
-                new Difficulty(new Bytes("1d00ffff")),
+                new Difficulty(fromHex("1d00ffff")),
                 414098458
         );
 
         CoinbaseInput input = new CoinbaseInput(
-                new CoinbaseData(null, new Bytes("04FFFF001D0104455468652054696D65732030332F4A616E2F32303039204368616E63656C6C6F72206F6E206272696E6B206F66207365636F6E64206261696C6F757420666F722062616E6B73"))
+                new CoinbaseData(null, fromHex("04FFFF001D0104455468652054696D65732030332F4A616E2F32303039204368616E63656C6C6F72206F6E206272696E6B206F66207365636F6E64206261696C6F757420666F722062616E6B73").array())
         );
         List<Input> inputs = Collections.singletonList(input);
         Output output = new Output(
-                new Value(5_000_000_000L),
-                new Script().__(new Bytes("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f")).__(OP.CHECKSIG)
+                5_000_000_000L,
+                new Script().__(fromHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f")).__(OP.CHECKSIG)
         );
         List<Output> outputs = Collections.singletonList(output);
         List<Transaction> transactions = Collections.singletonList(new Transaction(TxVersion.V1, 0, inputs, outputs));
@@ -101,7 +106,9 @@ class Testnet3GenesisBlockTest {
 
         String genesisHash = "000000000019D6689C085AE165831E934FF763AE46A2A6C172B3F1B60A8CE26F";
         Block genesis = new TestnetConfig().genesis();
-        assertEquals(genesisBinary, genesis.encode().getHexString());
-        assertEquals(genesisHash, new Bytes(headerBinary).doubleSha256().flip().getHexString());
+        ByteBuf buffer = Unpooled.buffer();
+        genesis.write(buffer);
+        assertEquals(genesisBinary, ByteBufUtil.hexDump(buffer));
+        assertEquals(genesisHash, ByteBufUtil.hexDump(new DigestByteBuf(fromHex(headerBinary)).doubleSha256()));
     }
 }

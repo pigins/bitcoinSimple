@@ -10,11 +10,11 @@ class VarIntTest extends BaseTest {
     @Test
     void encode() {
         VarInt varInt = new VarInt(0x6AL);
-        assertEquals("6A", varInt.encode().getHexString());
+        assertEquals("6A", writeHex(varInt));
         varInt = new VarInt(550L);
-        assertEquals("FD2602", varInt.encode().getHexString());
+        assertEquals("FD2602", writeHex(varInt));
         varInt = new VarInt(998000L);
-        assertEquals("FE703A0F00", varInt.encode().getHexString());
+        assertEquals("FE703A0F00", writeHex(varInt));
     }
 
     @Test

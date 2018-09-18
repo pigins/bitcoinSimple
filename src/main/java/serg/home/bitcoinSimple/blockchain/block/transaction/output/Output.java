@@ -1,13 +1,10 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.output;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.blockchain.block.transaction.TxVersion;
 import serg.home.bitcoinSimple.blockchain.block.transaction.script.Script;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
-public class Output implements BinaryEncoded {
+public class Output implements ByteBufWritable {
     public static Output read(ByteBuf byteBuf) {
        return new Output(byteBuf.readLongLE(), Script.read(byteBuf));
     }

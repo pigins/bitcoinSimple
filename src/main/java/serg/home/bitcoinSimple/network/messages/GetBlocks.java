@@ -1,7 +1,6 @@
 package serg.home.bitcoinSimple.network.messages;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.ProtocolVersion;
 import serg.home.bitcoinSimple.network.model.VarInt;
 

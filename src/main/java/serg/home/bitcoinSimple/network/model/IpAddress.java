@@ -1,13 +1,11 @@
 package serg.home.bitcoinSimple.network.model;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
-import java.math.BigInteger;
 import java.util.BitSet;
 
-public class IpAddress implements BinaryEncoded {
+public class IpAddress implements ByteBufWritable {
     public static IpAddress read(ByteBuf byteBuf) {
         byteBuf.readerIndex(byteBuf.readerIndex() + 12);
         return new IpAddress(byteBuf.readInt());

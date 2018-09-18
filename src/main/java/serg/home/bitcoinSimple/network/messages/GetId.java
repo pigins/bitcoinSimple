@@ -3,9 +3,7 @@ package serg.home.bitcoinSimple.network.messages;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
-import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.VarInt;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 import serg.home.bitcoinSimple.network.model.ProtocolVersion;
 
 import java.util.List;

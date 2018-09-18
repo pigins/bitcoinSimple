@@ -1,8 +1,6 @@
 package serg.home.bitcoinSimple.wallet;
 
 
-import serg.home.bitcoinSimple.common.Bytes;
-
 import java.io.*;
 import java.nio.file.Path;
 import java.security.*;

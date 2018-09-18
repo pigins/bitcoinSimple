@@ -1,16 +1,14 @@
 package serg.home.bitcoinSimple.network.messages;
 
 import org.junit.jupiter.api.Test;
-import serg.home.bitcoinSimple.common.Bytes;
+import serg.home.bitcoinSimple.BaseTest;
 import serg.home.bitcoinSimple.network.model.NetAddress;
 import serg.home.bitcoinSimple.network.model.Timestamp8;
-import serg.home.bitcoinSimple.network.model.VarString;
 import serg.home.bitcoinSimple.network.model.*;
-import serg.home.bitcoinSimple.protocol.BtcMessage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class VersionTest {
+class VersionTest extends BaseTest {
     private static final String VERSION_PAYLOAD =
                     "72110100"
                     +"0100000000000000"
@@ -36,8 +34,8 @@ class VersionTest {
 
     @Test
     void compare() {
-        System.out.println(new BtcMessage(new Bytes(TESTNET_PAYLOAD)).version());
-        System.out.println(new BtcMessage(new Bytes(APP_PAYLOAD)).version());
+        System.out.println(Version.read(fromHex(TESTNET_PAYLOAD)));
+        System.out.println(Version.read(fromHex(APP_PAYLOAD)));
     }
 
     @Test
@@ -48,7 +46,6 @@ class VersionTest {
         Timestamp8 timestamp = new Timestamp8(1531662845);
         NetAddress toAddress = new NetAddress(new Services(), new IpAddress("127.0.0.1"), 0);
         NetAddress fromAddress = new NetAddress(services, new IpAddress("127.0.0.1"), 0);
-        VarString userAgent = new VarString("/Satoshi:0.16.1/");
         Version payload = new Version(
                 protocolVersion,
                 services,
@@ -56,7 +53,7 @@ class VersionTest {
                 toAddress,
                 fromAddress,
                 0xF92522BC2A1DA055L,
-                userAgent,
+                "/Satoshi:0.16.1/",
                 0,
                 true
         );
@@ -65,8 +62,7 @@ class VersionTest {
 
     @Test
     void payloadDecode() {
-        Version payload = new BtcMessage(new Bytes(VERSION_PAYLOAD)).version();
-        assertEquals(VERSION_PAYLOAD, payload.encode().getHexString());
+        assertEquals(VERSION_PAYLOAD, writeHex(Version.read(fromHex(VERSION_PAYLOAD))));
     }
 
     @Test
@@ -76,7 +72,7 @@ class VersionTest {
         Timestamp8 timestamp = new Timestamp8(1415483324);
         NetAddress toAddress = new NetAddress(services, new IpAddress("198.27.100.9"), 8333);
         NetAddress fromAddress = new NetAddress(services, new IpAddress("203.0.113.192"), 8333);
-        VarString userAgent = new VarString("/Satoshi:0.9.3/");
+        String userAgent = "/Satoshi:0.9.3/";
         Version payload = new Version(
                 protocolVersion,
                 services,
@@ -88,6 +84,6 @@ class VersionTest {
                 329167,
                 true
         );
-        assertEquals(VERSION_PAYLOAD, payload.encode().getHexString());
+        assertEquals(VERSION_PAYLOAD, writeHex(payload));
     }
 }

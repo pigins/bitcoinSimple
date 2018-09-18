@@ -1,15 +1,14 @@
 package serg.home.bitcoinSimple.blockchain.block;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import serg.home.bitcoinSimple.network.model.Timestamp4;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.time.OffsetDateTime;
 
-public class BlockHeader implements BinaryEncoded {
+public class BlockHeader implements ByteBufWritable {
     public static BlockHeader read(ByteBuf byteBuf) {
         return new BlockHeader(
                 BlockVersion.read(byteBuf),
@@ -21,7 +20,7 @@ public class BlockHeader implements BinaryEncoded {
                 true
         );
     }
-    private static Bytes ZERO_BYTE = new Bytes("00");
+    private static ByteBuf ZERO_BYTE = Unpooled.wrappedBuffer(ByteBufUtil.decodeHexDump("00"));
 
 
     private BlockVersion blockVersion;
@@ -33,16 +32,16 @@ public class BlockHeader implements BinaryEncoded {
     private int uNonce;
     private boolean withZeroByte;
 
-    public BlockHeader(BlockVersion blockVersion, ByteBuf previousBlockHash, ByteBuf mercleRoot, OffsetDateTime date, Difficulty difficulty, int uNonce, boolean withZeroByte) {
+    public BlockHeader(BlockVersion blockVersion, ByteBuf previousBlockHash, ByteBuf mercleRoot, Timestamp4 date, Difficulty difficulty, int uNonce, boolean withZeroByte) {
         this(blockVersion, previousBlockHash, mercleRoot, date, difficulty, uNonce);
         this.withZeroByte = withZeroByte;
     }
 
-    public BlockHeader(BlockVersion blockVersion, ByteBuf previousBlockHash, ByteBuf mercleRoot, OffsetDateTime date, Difficulty difficulty, int uNonce) {
+    public BlockHeader(BlockVersion blockVersion, ByteBuf previousBlockHash, ByteBuf mercleRoot, Timestamp4 date, Difficulty difficulty, int uNonce) {
         this.blockVersion = blockVersion;
         this.previousBlockHash = previousBlockHash;
         this.mercleRoot = mercleRoot;
-        this.date = date;
+        this.date = date.getValue();
         this.difficulty = difficulty;
         this.uNonce = uNonce;
         this.withZeroByte = true;
@@ -73,9 +72,10 @@ public class BlockHeader implements BinaryEncoded {
     }
 
     public ByteBuf hash() {
-        ByteBuf buffer = Unpooled.buffer();
-        write(buffer);
-        return buffer.doubleSha256();
+        throw new UnsupportedOperationException("not implemented");
+//        ByteBuf buffer = Unpooled.buffer();
+//        write(buffer);
+//        return buffer.doubleSha256();
     }
 
     @Override

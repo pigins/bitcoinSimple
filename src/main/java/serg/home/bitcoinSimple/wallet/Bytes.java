@@ -1,78 +1,17 @@
-package serg.home.bitcoinSimple.common;
+package serg.home.bitcoinSimple.wallet;
 
 import io.netty.buffer.ByteBuf;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
 
-import java.io.Serializable;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Objects;
 
-/**
- * wrapper for byte array with set of utility methods.
- */
-public class Bytes extends ByteBuf, BinaryEncoded {
-    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+class Bytes {
 
     public Bytes(ByteBuf byteBuf) {
         new Bytes(byteBuf.array());
-    }
-
-    public static Bytes concat(Bytes... arrays) {
-        int totalLength = 0;
-        for (Bytes array : arrays) {
-            totalLength += array.length();
-        }
-        byte[] result = new byte[totalLength];
-        int currentIndex = 0;
-        for (Bytes array : arrays) {
-            System.arraycopy(array.bytes, 0, result, currentIndex, array.length());
-            currentIndex += array.length();
-        }
-        return new Bytes(result);
-    }
-
-    public static Bytes fromInt(int value) {
-        return new Bytes(new byte[]{
-                (byte) (value >>> 24),
-                (byte) (value >>> 16),
-                (byte) (value >>> 8),
-                (byte) value});
-    }
-
-    public static Bytes fromBoolean(boolean value) {
-        byte v = (byte) (value ? 1 : 0);
-        return new Bytes(new byte[]{v});
-    }
-
-    public static Bytes fromShort(short value) {
-        ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES);
-        buffer.putShort(value);
-        return new Bytes(buffer.array());
-    }
-
-    public static Bytes fromIntLE(int value) {
-        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.putInt(value);
-        return new Bytes(buffer.array());
-    }
-
-    public static Bytes fromLongToLE(long value) {
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.putLong(value);
-        return new Bytes(buffer.array());
-    }
-
-    public static Bytes fromLong(long value) {
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        buffer.putLong(value);
-        return new Bytes(buffer.array());
     }
 
     protected byte[] bytes;
@@ -113,16 +52,6 @@ public class Bytes extends ByteBuf, BinaryEncoded {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("no SHA-256 algorithm");
         }
-    }
-
-    public String getHexString() {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
     }
 
     public Bytes ripeMD160() {
@@ -169,13 +98,6 @@ public class Bytes extends ByteBuf, BinaryEncoded {
         return this.bytes;
     }
 
-    public Bytes nullPadded(int length) {
-        byte[] res = new byte[length];
-        System.arraycopy(this.bytes, 0, res, 0, this.bytes.length);
-        this.bytes = res;
-        return this;
-    }
-
     private byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
@@ -184,18 +106,6 @@ public class Bytes extends ByteBuf, BinaryEncoded {
                     + Character.digit(s.charAt(i+1), 16));
         }
         return data;
-    }
-
-    @Override
-    public Bytes encode() {
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return "Bytes{" +
-                "encode=" + getHexString() +
-                '}';
     }
 
     @Override
@@ -210,6 +120,4 @@ public class Bytes extends ByteBuf, BinaryEncoded {
     public int hashCode() {
         return Arrays.hashCode(bytes);
     }
-
-
 }

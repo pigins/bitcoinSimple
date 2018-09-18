@@ -5,15 +5,13 @@ import serg.home.bitcoinSimple.blockchain.block.transaction.input.CoinbaseInput;
 import serg.home.bitcoinSimple.blockchain.block.transaction.input.Input;
 import serg.home.bitcoinSimple.blockchain.block.transaction.input.RegularInput;
 import serg.home.bitcoinSimple.blockchain.block.transaction.output.Output;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.Bytes;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 import serg.home.bitcoinSimple.network.model.VarInt;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Transaction implements BinaryEncoded {
+public class Transaction implements ByteBufWritable {
     public static Transaction read(ByteBuf byteBuf) {
         TxVersion version = TxVersion.read(byteBuf);
         int inputsCount = (int) VarInt.read(byteBuf);
@@ -58,8 +56,9 @@ public class Transaction implements BinaryEncoded {
         this.outputs = outputs;
     }
 
-    public Bytes hash() {
-        return encode().doubleSha256();
+    public ByteBuf hash() {
+        throw new UnsupportedOperationException();
+//        return encode().doubleSha256();
     }
 
     @Override

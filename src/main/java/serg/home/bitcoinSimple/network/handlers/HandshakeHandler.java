@@ -18,6 +18,8 @@ import serg.home.bitcoinSimple.network.messages.Version;
 import serg.home.bitcoinSimple.network.model.*;
 
 import java.net.InetSocketAddress;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class HandshakeHandler extends SimpleChannelInboundHandler<BtcMessage> {
@@ -43,7 +45,6 @@ public class HandshakeHandler extends SimpleChannelInboundHandler<BtcMessage> {
                 Service.NODE_WITNESS,
                 Service.NODE_NETWORK_LIMITED
         );
-        Timestamp8 timestamp = new Timestamp8();
         InetSocketAddress remoteAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         NetAddress toAddress = new NetAddress(
                 new Services(Service.NODE_WITNESS, Service.NODE_NETWORK),
@@ -54,15 +55,14 @@ public class HandshakeHandler extends SimpleChannelInboundHandler<BtcMessage> {
                 services,
                 new IpAddress(localAddress.getAddress().getHostAddress()), localAddress.getPort()
         );
-        VarString userAgent = new VarString("/Satoshi:0.16.1/");
         Version payload = new Version(
                 appProtocolVersion,
                 services,
-                timestamp,
+                new Timestamp8(),
                 toAddress,
                 fromAddress,
                 ThreadLocalRandom.current().nextLong(),
-                userAgent,
+                "/Satoshi:0.16.1/",
                 localBlockchain.height(),
                 true
         );
@@ -75,10 +75,10 @@ public class HandshakeHandler extends SimpleChannelInboundHandler<BtcMessage> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
         logger.trace(msg);
-        if (handshake.success() && !isHandshakeCommand(msg.getCommand())) {
+        if (handshake.success() && !msg.isHandshakeCommand()) {
             ctx.fireChannelRead(msg);
-        } else if (!handshake.success() && isHandshakeCommand(msg.getCommand())) {
-            if (msg.getCommand().equals(Version.NAME)) {
+        } else if (!handshake.success() && msg.isHandshakeCommand()) {
+            if (msg.isVersion()) {
                 Version versionPayload = msg.version();
                 versionPayload.protocolVersion();
                 remotePeer = versionPayload.peer();
@@ -89,16 +89,16 @@ public class HandshakeHandler extends SimpleChannelInboundHandler<BtcMessage> {
                         handshakeSuccess(ctx);
                     }
                 });
-            } else if (msg.getCommand().equals(Verack.NAME)) {
+            } else if (msg.isVerack()) {
                 handshake.remoteVerackReceived();
                 if (handshake.success()) {
                     handshakeSuccess(ctx);
                 }
             }
-        } else if (!handshake.success() && !isHandshakeCommand(msg.getCommand())) {
-            throw new CommandBeforeHandshake(msg.getCommand());
-        } else if (handshake.success() && isHandshakeCommand(msg.getCommand())) {
-            throw new HandshakeAlreadyDone(msg.getCommand());
+        } else if (!handshake.success() && !msg.isHandshakeCommand()) {
+            throw new CommandBeforeHandshake(msg.command());
+        } else if (handshake.success() && msg.isHandshakeCommand()) {
+            throw new HandshakeAlreadyDone(msg.command());
         }
     }
 
@@ -108,10 +108,6 @@ public class HandshakeHandler extends SimpleChannelInboundHandler<BtcMessage> {
         channel.connectionVersion(handshake.connectionVersion());
         channel.remotePeer(remotePeer);
         ctx.fireUserEventTriggered(new HandshakeEvent());
-    }
-
-    private boolean isHandshakeCommand(String command) {
-        return command.equals(Version.NAME) || command.equals(Verack.NAME);
     }
 
     static class Handshake {

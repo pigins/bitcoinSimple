@@ -1,9 +1,9 @@
 package serg.home.bitcoinSimple.network.handlers;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import serg.home.bitcoinSimple.blockchain.LocalBlockchain;
-import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.protocol.BtcMessage;
 import serg.home.bitcoinSimple.network.messages.GetHeaders;
 import serg.home.bitcoinSimple.network.messages.Headers;
@@ -28,11 +28,11 @@ public class DownloadHeadersHandler extends SimpleChannelInboundHandler<BtcMessa
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, BtcMessage msg) throws Exception {
-        if (msg.getCommand().equals(Headers.NAME)) {
+        if (msg.isHeaders()) {
             Headers headers = msg.headers();
             if (!headers.sizeLessThenMax()) {
                 localBlockchain.addHeaders(headers.blockHeaders());
-                List<Bytes> locator = localBlockchain.locator();
+                List<ByteBuf> locator = localBlockchain.locator();
                 ctx.channel().writeAndFlush(new GetHeaders(protocolVersion, locator, true));
             } else {
                 // TODO

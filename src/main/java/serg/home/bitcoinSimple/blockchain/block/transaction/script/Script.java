@@ -1,14 +1,13 @@
 package serg.home.bitcoinSimple.blockchain.block.transaction.script;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.Bytes;
 import serg.home.bitcoinSimple.network.model.VarInt;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class  Script implements BinaryEncoded {
+public class  Script implements ByteBufWritable {
     public static Script read(ByteBuf byteBuf) {
         List<Object> items = new ArrayList<>();
         int scriptLength = (int) VarInt.read(byteBuf);
@@ -44,13 +43,14 @@ public class  Script implements BinaryEncoded {
 
     public Script __(ByteBuf data) {
         // TODO
-        if (data.length() <= 75) {
-            items.add((byte)data.length());
-            items.add(data);
-        } else {
-            throw new UnsupportedOperationException();
-        }
-        return this;
+        throw new UnsupportedOperationException("not implemented");
+//        if (data.length() <= 75) {
+//            items.add((byte)data.length());
+//            items.add(data);
+//        } else {
+//            throw new UnsupportedOperationException();
+//        }
+//        return this;
     }
 
     @Override

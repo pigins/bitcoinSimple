@@ -1,11 +1,9 @@
 package serg.home.bitcoinSimple.network.model;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.Bytes;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
-import serg.home.bitcoinSimple.common.binary.CompoundBinary;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
-public class InvVector implements BinaryEncoded {
+public class InvVector implements ByteBufWritable {
     public static InvVector read(ByteBuf byteBuf) {
         return new InvVector(InvType.fromInt(byteBuf.readIntLE()), byteBuf.readBytes(32));
     }

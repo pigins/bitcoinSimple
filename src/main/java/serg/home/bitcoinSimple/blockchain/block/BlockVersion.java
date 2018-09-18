@@ -1,12 +1,12 @@
 package serg.home.bitcoinSimple.blockchain.block;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.common.binary.BinaryEncoded;
+import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.util.Arrays;
 
 // https://data.bitcoinity.org/bitcoin/block_version/all?c=block_version&r=month&t=a
-public enum BlockVersion implements BinaryEncoded {
+public enum BlockVersion implements ByteBufWritable {
     V1(1), V2(2), V3(3), V4(4);
 
     public static BlockVersion read(ByteBuf byteBuf) {
