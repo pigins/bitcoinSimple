@@ -1,4 +1,4 @@
-package serg.home.bitcoinSimple.blockchain.block.transaction.input;
+package serg.home.bitcoinSimple.network.model.block.transaction.input;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;

@@ -1,8 +1,8 @@
 package serg.home.bitcoinSimple.network.messages;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.blockchain.block.BlockHeader;
-import serg.home.bitcoinSimple.blockchain.block.transaction.Transaction;
+import serg.home.bitcoinSimple.network.model.block.BlockHeader;
+import serg.home.bitcoinSimple.network.model.block.transaction.Transaction;
 import serg.home.bitcoinSimple.network.model.VarInt;
 
 import java.util.ArrayList;

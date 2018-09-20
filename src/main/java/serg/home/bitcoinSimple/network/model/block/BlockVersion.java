@@ -1,4 +1,4 @@
-package serg.home.bitcoinSimple.blockchain.block;
+package serg.home.bitcoinSimple.network.model.block;
 
 import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.ByteBufWritable;

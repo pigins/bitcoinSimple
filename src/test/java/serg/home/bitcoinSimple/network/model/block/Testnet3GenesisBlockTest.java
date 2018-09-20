@@ -1,18 +1,18 @@
-package serg.home.bitcoinSimple.blockchain.block;
+package serg.home.bitcoinSimple.network.model.block;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.BaseTest;
-import serg.home.bitcoinSimple.blockchain.block.transaction.Transaction;
-import serg.home.bitcoinSimple.blockchain.block.transaction.TxVersion;
-import serg.home.bitcoinSimple.blockchain.block.transaction.input.CoinbaseData;
-import serg.home.bitcoinSimple.blockchain.block.transaction.input.CoinbaseInput;
-import serg.home.bitcoinSimple.blockchain.block.transaction.input.Input;
-import serg.home.bitcoinSimple.blockchain.block.transaction.output.Output;
-import serg.home.bitcoinSimple.blockchain.block.transaction.script.OP;
-import serg.home.bitcoinSimple.blockchain.block.transaction.script.Script;
+import serg.home.bitcoinSimple.network.model.block.transaction.Transaction;
+import serg.home.bitcoinSimple.network.model.block.transaction.TxVersion;
+import serg.home.bitcoinSimple.network.model.block.transaction.input.CoinbaseData;
+import serg.home.bitcoinSimple.network.model.block.transaction.input.CoinbaseInput;
+import serg.home.bitcoinSimple.network.model.block.transaction.input.Input;
+import serg.home.bitcoinSimple.network.model.block.transaction.output.Output;
+import serg.home.bitcoinSimple.network.model.block.transaction.script.OP;
+import serg.home.bitcoinSimple.network.model.block.transaction.script.Script;
 import serg.home.bitcoinSimple.common.DigestByteBuf;
 import serg.home.bitcoinSimple.network.messages.Block;
 import serg.home.bitcoinSimple.config.TestnetConfig;

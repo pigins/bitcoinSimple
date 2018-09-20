@@ -1,4 +1,4 @@
-package serg.home.bitcoinSimple.blockchain.block;
+package serg.home.bitcoinSimple.network.model.block;
 
 import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.BaseTest;

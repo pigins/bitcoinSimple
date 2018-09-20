@@ -1,4 +1,4 @@
-package serg.home.bitcoinSimple.blockchain.block;
+package serg.home.bitcoinSimple.network.model.block;
 
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;

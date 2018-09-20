@@ -1,4 +1,4 @@
-package serg.home.bitcoinSimple.blockchain.block.transaction.script;
+package serg.home.bitcoinSimple.network.model.block.transaction.script;
 
 import java.util.Arrays;
 import java.util.function.Supplier;

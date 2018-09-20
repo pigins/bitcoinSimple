@@ -2,7 +2,7 @@ package serg.home.bitcoinSimple.blockchain;
 
 import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.network.messages.Block;
-import serg.home.bitcoinSimple.blockchain.block.BlockHeader;
+import serg.home.bitcoinSimple.network.model.block.BlockHeader;
 import serg.home.bitcoinSimple.database.Database;
 
 import java.util.ArrayList;

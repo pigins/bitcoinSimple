@@ -1,7 +1,7 @@
-package serg.home.bitcoinSimple.blockchain.block.transaction.output;
+package serg.home.bitcoinSimple.network.model.block.transaction.output;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.blockchain.block.transaction.script.Script;
+import serg.home.bitcoinSimple.network.model.block.transaction.script.Script;
 import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 public class Output implements ByteBufWritable {

@@ -1,10 +1,10 @@
-package serg.home.bitcoinSimple.blockchain.block.transaction;
+package serg.home.bitcoinSimple.network.model.block.transaction;
 
 import io.netty.buffer.ByteBuf;
-import serg.home.bitcoinSimple.blockchain.block.transaction.input.CoinbaseInput;
-import serg.home.bitcoinSimple.blockchain.block.transaction.input.Input;
-import serg.home.bitcoinSimple.blockchain.block.transaction.input.RegularInput;
-import serg.home.bitcoinSimple.blockchain.block.transaction.output.Output;
+import serg.home.bitcoinSimple.network.model.block.transaction.input.CoinbaseInput;
+import serg.home.bitcoinSimple.network.model.block.transaction.input.Input;
+import serg.home.bitcoinSimple.network.model.block.transaction.input.RegularInput;
+import serg.home.bitcoinSimple.network.model.block.transaction.output.Output;
 import serg.home.bitcoinSimple.common.ByteBufWritable;
 import serg.home.bitcoinSimple.network.model.VarInt;
 
