@@ -6,10 +6,17 @@ import serg.home.bitcoinSimple.BaseTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VarStringTest extends BaseTest {
+    private static String STRING_HEX = "102f5361746f7368693a302e31362e312f";
+    private static String STRING = "/Satoshi:0.16.1/";
 
     @Test
     void read() {
-        String read = VarString.read(fromHex("102F5361746F7368693A302E31362E312F"));
-        assertEquals("/Satoshi:0.16.1/", read);
+        String read = VarString.read(fromHex(STRING_HEX));
+        assertEquals(STRING, read);
+    }
+
+    @Test
+    void write() {
+        assertEquals(STRING_HEX, writeHex(new VarString(STRING)));
     }
 }

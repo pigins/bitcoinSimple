@@ -5,6 +5,9 @@ import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Variable length string can be stored using a variable length integer followed by the string itself.
+ */
 public class VarString implements ByteBufWritable {
     public static String read(ByteBuf byteBuf) {
         long stringLength = VarInt.read(byteBuf);
