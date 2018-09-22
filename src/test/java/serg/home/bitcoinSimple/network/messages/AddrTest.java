@@ -27,9 +27,9 @@ class AddrTest extends BaseTest {
     void decode() {
         Addr addr = Addr.read(fromHex(ADDR_PAYLOAD));
         assertEquals(1, addr.getAddrList().size());
-        assertEquals("2010-12-21T02:50:10Z", addr.getAddrList().get(0).getTimestamp().toString());
-        assertEquals("10.0.0.1", addr.getAddrList().get(0).getAddress().ipAddress().getIpString());
-        assertEquals(8333, addr.getAddrList().get(0).getAddress().port());
+        assertEquals("2010-12-21T02:50:10Z", addr.getAddrList().get(0).timestamp().toString());
+        assertEquals("10.0.0.1", addr.getAddrList().get(0).address().ipAddress().getIpString());
+        assertEquals(8333, addr.getAddrList().get(0).address().port());
     }
 
     @Test

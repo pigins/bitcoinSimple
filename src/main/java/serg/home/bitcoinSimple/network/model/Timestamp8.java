@@ -6,6 +6,9 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
+/**
+ * Standard UNIX timestamp in seconds. 8 bytes length.
+ */
 public class Timestamp8 extends Timestamp {
 
     public static Timestamp8 read(ByteBuf byteBuf) {

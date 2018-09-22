@@ -56,12 +56,12 @@ public class DbKnownAddresses implements KnownAddresses {
 
     private void merge(List<TimestampWithAddress> addrList) {
         String values = addrList.stream()
-                .filter(distinctByKey(elem -> elem.getAddress().ipAddress().asInt()))
+                .filter(distinctByKey(elem -> elem.address().ipAddress().asInt()))
                 .map(addr -> "("
-                        + addr.getAddress().ipAddress().asInt() +
-                        "," + (short) addr.getAddress().port() +
-                        "," + addr.getAddress().services().asLong() +
-                        ",'" + addr.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssxxx")) +
+                        + addr.address().ipAddress().asInt() +
+                        "," + (short) addr.address().port() +
+                        "," + addr.address().services().asLong() +
+                        ",'" + addr.timestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssxxx")) +
                         "')")
                 .collect(Collectors.joining(","));
         database.query()
@@ -100,6 +100,6 @@ public class DbKnownAddresses implements KnownAddresses {
 
     @Override
     public InetSocketAddress next() {
-        return cashIterator.next().getAddress().inetSocketAddress();
+        return cashIterator.next().address().inetSocketAddress();
     }
 }

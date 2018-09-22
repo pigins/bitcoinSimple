@@ -10,15 +10,17 @@ public class TimestampWithAddress {
         this.timestamp = timestamp.getValue();
         this.address = address;
     }
+
     public TimestampWithAddress(OffsetDateTime timestamp, NetAddress address) {
         this.timestamp = timestamp;
         this.address = address;
     }
-    public OffsetDateTime getTimestamp() {
+
+    public OffsetDateTime timestamp() {
         return timestamp;
     }
 
-    public NetAddress getAddress() {
+    public NetAddress address() {
         return address;
     }
 

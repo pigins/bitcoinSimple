@@ -43,8 +43,8 @@ public class Addr implements Payload {
     public void write(ByteBuf byteBuf) {
         new VarInt(addrList.size()).write(byteBuf);
         for (TimestampWithAddress timestampWithAddress : addrList) {
-            new Timestamp4(timestampWithAddress.getTimestamp()).write(byteBuf);
-            timestampWithAddress.getAddress().write(byteBuf);
+            new Timestamp4(timestampWithAddress.timestamp()).write(byteBuf);
+            timestampWithAddress.address().write(byteBuf);
         }
     }
 
