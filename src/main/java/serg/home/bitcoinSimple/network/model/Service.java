@@ -13,7 +13,7 @@ public enum Service {
         this.value = value;
     }
 
-    public long getValue() {
+    public long value() {
         return value;
     }
 }
