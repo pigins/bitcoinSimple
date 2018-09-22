@@ -8,38 +8,45 @@ import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.util.Objects;
 
+/**
+ * @see <a href="https://bitcoin.org/en/developer-reference#protocol-versions">https://bitcoin.org/en/developer-reference#protocol-versions</a>
+ */
 public class ProtocolVersion implements ByteBufWritable, Comparable<ProtocolVersion> {
     public static Logger logger = LogManager.getLogger();
+
     public static ProtocolVersion min(ProtocolVersion a, ProtocolVersion b) {
         return a.compareTo(b) < 0 ? a : b;
     }
+
     private static int[] KNOWN_VERSIONS = new int[]{
             106, 209, 311, 31402, 31800, 60000, 60001, 60002, 70001, 70002, 70011, 70012, 70013, 70014, 70015
     };
+
     public static ProtocolVersion read(ByteBuf byteBuf) {
         return new ProtocolVersion(byteBuf.readIntLE());
     }
-    private int uVersion;
 
-    public ProtocolVersion(int uVersion) {
-        if (!Arrays.contains(KNOWN_VERSIONS, uVersion)) {
-            logger.warn("unknown protocol version {}", uVersion);
+    private int version;
+
+    public ProtocolVersion(int version) {
+        if (!Arrays.contains(KNOWN_VERSIONS, version)) {
+            logger.warn("unknown protocol version {}", version);
         }
-        this.uVersion = uVersion;
+        this.version = version;
     }
 
-    public int getVersion() {
-        return uVersion;
+    public int asInt() {
+        return version;
     }
 
     @Override
     public void write(ByteBuf byteBuf) {
-        byteBuf.writeIntLE(uVersion);
+        byteBuf.writeIntLE(version);
     }
 
     @Override
     public int compareTo(ProtocolVersion other) {
-        return Integer.compare(this.getVersion(), other.getVersion());
+        return Integer.compare(this.asInt(), other.asInt());
     }
 
     @Override
@@ -47,20 +54,18 @@ public class ProtocolVersion implements ByteBufWritable, Comparable<ProtocolVers
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProtocolVersion that = (ProtocolVersion) o;
-        return uVersion == that.uVersion;
+        return version == that.version;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uVersion);
+        return Objects.hash(version);
     }
 
     @Override
     public String toString() {
         return "ProtocolVersion{" +
-                "uVersion=" + uVersion +
+                "version=" + version +
                 '}';
     }
 }
-
-
