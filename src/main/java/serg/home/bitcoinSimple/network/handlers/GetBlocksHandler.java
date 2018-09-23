@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import serg.home.bitcoinSimple.blockchain.LocalBlockchain;
+import serg.home.bitcoinSimple.network.model.Hash32;
 import serg.home.bitcoinSimple.network.model.InvType;
 import serg.home.bitcoinSimple.network.model.InvVector;
 import serg.home.bitcoinSimple.protocol.BtcMessage;
@@ -62,7 +63,7 @@ public class GetBlocksHandler extends SimpleChannelInboundHandler<BtcMessage> {
     public void channelRead0(ChannelHandlerContext ctx, final BtcMessage msg) {
         if (msg.isInv()) {
             Inv inv = msg.inv();
-            List<ByteBuf> hashes = inv.invVectors().stream()
+            List<Hash32> hashes = inv.invVectors().stream()
                     .filter(invVector -> invVector.type().equals(InvType.MSG_BLOCK))
                     .map(InvVector::hash)
                     .collect(Collectors.toList());

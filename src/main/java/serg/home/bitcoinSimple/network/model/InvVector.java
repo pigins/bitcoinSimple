@@ -5,13 +5,13 @@ import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 public class InvVector implements ByteBufWritable {
     public static InvVector read(ByteBuf byteBuf) {
-        return new InvVector(InvType.fromInt(byteBuf.readIntLE()), byteBuf.readBytes(32));
+        return new InvVector(InvType.fromInt(byteBuf.readIntLE()), Hash32.read(byteBuf));
     }
 
     private InvType type;
-    private ByteBuf hash;
+    private Hash32 hash;
 
-    public InvVector(InvType type, ByteBuf hash) {
+    public InvVector(InvType type, Hash32 hash) {
         this.type = type;
         this.hash = hash;
     }
@@ -20,14 +20,14 @@ public class InvVector implements ByteBufWritable {
         return type;
     }
 
-    public ByteBuf hash() {
+    public Hash32 hash() {
         return hash;
     }
 
     @Override
     public void write(ByteBuf byteBuf) {
-        byteBuf.writeIntLE(type.typeValue());
-        byteBuf.writeBytes(hash);
+        byteBuf.writeIntLE(type.asInt());
+        hash.write(byteBuf);
     }
 
     @Override

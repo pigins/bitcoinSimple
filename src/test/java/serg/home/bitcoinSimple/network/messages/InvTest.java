@@ -2,6 +2,7 @@ package serg.home.bitcoinSimple.network.messages;
 
 import org.junit.jupiter.api.Test;
 import serg.home.bitcoinSimple.BaseTest;
+import serg.home.bitcoinSimple.network.model.Hash32;
 import serg.home.bitcoinSimple.network.model.InvType;
 import serg.home.bitcoinSimple.network.model.InvVector;
 
@@ -37,8 +38,8 @@ class InvTest extends BaseTest {
     @Test
     void encode() {
         List<InvVector> invVectors = new ArrayList<>();
-        invVectors.add(new InvVector(InvType.MSG_TX, fromHex("DE55FFD709AC1F5DC509A0925D0B1FC442CA034F224732E429081DA1B621F55A")));
-        invVectors.add(new InvVector(InvType.MSG_TX, fromHex("91D36D997037E08018262978766F24B8A055AAF1D872E94AE85E9817B2C68DC7")));
+        invVectors.add(new InvVector(InvType.MSG_TX, new Hash32(fromHex("DE55FFD709AC1F5DC509A0925D0B1FC442CA034F224732E429081DA1B621F55A"))));
+        invVectors.add(new InvVector(InvType.MSG_TX, new Hash32(fromHex("91D36D997037E08018262978766F24B8A055AAF1D872E94AE85E9817B2C68DC7"))));
         assertEquals(GETBLOCKS_PAYLOAD, writeHex(new Inv(invVectors)));
     }
 }

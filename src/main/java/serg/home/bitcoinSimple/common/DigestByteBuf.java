@@ -27,7 +27,6 @@ public class DigestByteBuf extends ByteBuf {
     private static MessageDigest sha256Digest;
     static {
         try {
-
             sha256Digest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             logger.error(e);
