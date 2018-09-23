@@ -5,13 +5,15 @@ import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.util.Arrays;
 
+/**
+ * Four defined bytes which start every message in the Bitcoin P2P protocol to allow seeking to the next message.
+ */
 public enum Network implements ByteBufWritable {
     MAIN(0xD9B4BEF9),
-    TESTNET(0xDAB5BFFA),
-    TESTNET3(0x0709110B),
-    NAMECOIN(0xFEB4BEF9);
+    REGTEST(0xDAB5BFFA),
+    TESTNET3(0x0709110B);
 
-    public final int magic;
+    private final int magic;
 
     Network(int magic) {
         this.magic = magic;
@@ -22,7 +24,7 @@ public enum Network implements ByteBufWritable {
         return Arrays.stream(Network.values())
                 .filter(network -> network.magic == value)
                 .findAny()
-                .get();
+                .orElseThrow();
     }
 
     @Override
