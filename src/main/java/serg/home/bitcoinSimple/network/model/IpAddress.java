@@ -5,13 +5,19 @@ import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.util.BitSet;
 
+/**
+ * IPv6 address. Network byte order. The original client only supported IPv4 and only read the last 4 bytes
+ * to get the IPv4 address.
+ * However, the IPv4 address is written into the message as a 16 byte IPv4-mapped IPv6 address
+ * (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
+ */
 public class IpAddress implements ByteBufWritable {
     public static IpAddress read(ByteBuf byteBuf) {
         byteBuf.readerIndex(byteBuf.readerIndex() + 12);
         return new IpAddress(byteBuf.readInt());
     }
 
-    static int toInt(String dottedDecimal) {
+    private static int toInt(String dottedDecimal) {
         int byte1 = 0;
         int value = 0;
         for (char c : dottedDecimal.toCharArray()) {
