@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.util.BitSet;
+import java.util.Objects;
 
 /**
  * IPv6 address. Network byte order. The original client only supported IPv4 and only read the last 4 bytes
@@ -73,5 +74,18 @@ public class IpAddress implements ByteBufWritable {
         return "IpAddress{" +
                 "value=" + getIpString() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IpAddress ipAddress = (IpAddress) o;
+        return value == ipAddress.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

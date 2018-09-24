@@ -4,11 +4,15 @@ import io.netty.buffer.ByteBuf;
 import serg.home.bitcoinSimple.common.ByteBufWritable;
 
 import java.net.InetSocketAddress;
+import java.util.Objects;
 
 /**
- * https://en.bitcoin.it/wiki/Protocol_documentation#Network_address
+ * @see <a href="https://en.bitcoin.it/wiki/Protocol_documentation#Network_address">https://en.bitcoin.it/wiki/Protocol_documentation#Network_address</a><br>
+ * it does not fill out the address information at all when the source or destination is "unroutable".
  */
 public class NetAddress implements ByteBufWritable {
+    private static byte[] UNROUTABLE_ADDRESS_BYTES = new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
     public static NetAddress read(ByteBuf byteBuf) {
         return new NetAddress(Services.read(byteBuf), IpAddress.read(byteBuf), Short.toUnsignedInt(byteBuf.readShort()));
     }
@@ -27,6 +31,10 @@ public class NetAddress implements ByteBufWritable {
         this.services = new Services(services);
         this.ipAddress = new IpAddress(ipAddress);
         this.port = Short.toUnsignedInt(port);
+    }
+
+    public boolean unroutable() {
+        return ipAddress.asInt() == 0 && port == 0;
     }
 
     public Services services() {
@@ -49,14 +57,26 @@ public class NetAddress implements ByteBufWritable {
     public void write(ByteBuf byteBuf) {
         services.write(byteBuf);
         if (ipAddress.isSiteLocalAddress()) {
-            // Newer protocol includes the checksum now, this is from a mainline (satoshi) client during an outgoing
-            // connection to another local client, notice that it does not fill out the address information at all when
-            // the source or destination is "unroutable".
-            byteBuf.writeBytes(new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
+            byteBuf.writeBytes(UNROUTABLE_ADDRESS_BYTES);
         } else {
             ipAddress.write(byteBuf);
             byteBuf.writeShort((short) port);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NetAddress that = (NetAddress) o;
+        return port == that.port &&
+                Objects.equals(services, that.services) &&
+                Objects.equals(ipAddress, that.ipAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(services, ipAddress, port);
     }
 
     @Override
