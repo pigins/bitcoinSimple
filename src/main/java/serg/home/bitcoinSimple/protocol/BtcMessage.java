@@ -20,20 +20,20 @@ public class BtcMessage {
 
     public void validateNetwork(Network network) {
         if (!header.sameNetwork(network)) {
-            throw new DifferentNetworks(header.getCommand());
+            throw new DifferentNetworks(header.command());
         }
     }
 
     public void validateChecksum() {
         DigestByteBuf digestByteBuf = new DigestByteBuf(payload);
         int calculatedChecksum = digestByteBuf.doubleSha256().readInt();
-        if (calculatedChecksum != header.getChecksum()) {
-            throw new InvalidMessageChecksum(header.getCommand());
+        if (calculatedChecksum != header.checksum()) {
+            throw new InvalidMessageChecksum(header.command());
         }
     }
 
     public String command() {
-        return header.getCommand();
+        return header.command();
     }
 
     public boolean isHandshakeCommand() {

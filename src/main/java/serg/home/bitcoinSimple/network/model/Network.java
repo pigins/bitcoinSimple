@@ -6,7 +6,7 @@ import serg.home.bitcoinSimple.common.ByteBufWritable;
 import java.util.Arrays;
 
 /**
- * Four defined bytes which start every message in the Bitcoin P2P protocol to allow seeking to the next message.
+ * Magic value indicating message origin network, and used to seek to next message when stream state is unknown
  */
 public enum Network implements ByteBufWritable {
     MAIN(0xD9B4BEF9),
